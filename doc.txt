@@ -1,0 +1,67 @@
+Pages
+---------------
+
+*Homepage: On this page;User can display products,categories(which are selected from navigation bar),search for products from search bar without logging in
+
+*Search Page: On this page;User can display products with the searching text(which is taken by the searching bar) without logging in
+
+*Login/Register: On this page;User can Log In or Register
+
+*Category Displays:On this page;Users can display the product on any categorie without logging in
+
+*Product Displays:On this page;User can display detailed information about a spesific product and add the product to his/her shopping cart(only if user logins) using productID
+
+*User Profile:On this page;User can display and edit their informations and display their orders and previous orders.
+
+*After Login Page:On this page;User will be re-directed to this page after registeration or logging in.
+
+*Proceed checkout:On this page;User can confirm their shopping cart.
+
+*Payment Page:On this page;Users can pay for their products.
+
+
+
+Step 1
+-------------
+Database Design(done)
+Collecting data (done)
+Defining the main colors of the website(#235789 and white) (#ED1C24 #5610DE #235789 #F1D302 and black)
+Designing the logo(done)
+
+
+Step 2
+----------------
+Designing the navigation bar(done)
+Designing the Pages in figma    
+Designing the product component(done)
+
+
+
+Step 3
+----------------
+Coding the Homepage
+Coding the searching page
+Desgining the components like product discount banners
+
+
+Step 4
+-----------------
+Categorie Displays
+Product Displays
+
+
+Step 5
+------------------
+Register Page
+Login Page
+After Login Page
+User Profile
+
+
+Step 6
+------------------
+Proceed checkout
+Payment Page
+
+
+
