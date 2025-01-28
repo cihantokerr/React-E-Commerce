@@ -1,0 +1,147 @@
+#nav-bar{
+    border: 0.01rem solid #d3d3d3;
+    z-index: 3;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302); /* Adds a subtle shadow */
+}
+
+
+#nav-bar>a{
+    color: #949494;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+
+#nav-bar>#search-icon{
+    cursor: pointer;
+    color: #949494;
+    font-size: 1.1rem;
+}
+
+#nav-bar>a:hover{
+    color: #5610DE;
+}
+
+
+#nav-bar>#search-icon:hover{
+    color: #5610DE;
+}
+
+
+#nav-bar>#icon{
+    cursor: pointer;
+    color: #949494;
+    font-size: 1.4rem;
+}
+
+
+#nav-bar>#icon:hover{
+    color: #5610DE;
+}
+
+
+#nav-bar-shopping-cart{
+    width: 30%;
+    min-height: 25rem;
+    border: 0.1rem solid gray;
+    position: absolute;
+    top: 2.5rem;
+    right: 5rem;
+    flex-wrap: wrap;
+    word-break: break-all;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302); /* Adds a subtle shadow */
+}
+
+
+#nav-bar-shopping-cart>#products-div{
+    height: 20rem;
+    overflow-y:scroll;
+}
+
+
+#nav-bar-shopping-cart>#shopping-cart-underbar{
+    background-color: white;
+}
+
+
+#nav-bar-shopping-cart>#shopping-cart-underbar>#info>p{
+    color: #949494;
+    text-decoration: none;
+    font-size: 1rem;
+    word-break: keep-all;
+}
+
+
+#nav-bar-shopping-cart>#shopping-cart-underbar>form>button{
+    width: fit-content;
+    word-break: keep-all;
+    background-color: transparent;
+    color: #5610DE;
+    border-radius: 0.5rem;
+}
+
+
+@keyframes button_animation {
+    from{
+        background-color: transparent;
+        color: #5610DE;
+    }
+    to{
+        background-color: #5610DE;
+        color: white;
+    }
+}
+
+
+#nav-bar-shopping-cart>#shopping-cart-underbar>form>button:hover{
+    animation-name: button_animation;
+    animation-duration: 0.7s;
+    background-color: #5610DE;
+    color: white;
+}
+
+
+#nav-search-bar-div{
+    height: 10rem;
+    background-color: white;
+    z-index: 2;
+    display: none;
+}
+
+
+#nav-search-bar-div>form{
+    width: 70%;
+}
+
+
+#nav-search-bar-div>form>.form-group{
+    width: 80%;
+}
+
+
+#nav-search-bar-div>form>.form-group>input{
+    border-color: #d3d3d3;
+    text-align: center;
+    color: #949494;
+}
+
+#nav-search-bar-div>form>.form-group>input::placeholder{
+    color: #949494;
+    text-align: center;
+}
+
+#nav-search-bar-div>form>.form-group>input:focus{
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302);
+}
+
+
+#nav-search-bar-div>form>button{
+    background-color: #5610DE;
+    border: none;
+}
+
+
+#nav-search-bar-div>form>button:hover{
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302);
+}
