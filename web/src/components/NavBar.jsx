@@ -3,12 +3,11 @@ import './style/nav-bar.css'
 import {Search,Person,Bag} from 'react-bootstrap-icons'
 import { useEffect, useState } from 'react'
 import {useNavigate} from 'react-router-dom';
-import axios from 'axios'
 import ShoppingCartProduct from './ShoppingCartProduct';
 
 export default function NavBar(){
 
-    var[IsSessionNull,setIsSessionNull]=useState(false);
+    var[IsSessionNull,setIsSessionNull]=useState(true);
     var[IsSearchBarOnDisplay,setIsSearchBarOnDisplay]=useState(false);
     var[IsShoppingCartOnDisplay,setIsShoppingCartOnDisplay]=useState(false);
     

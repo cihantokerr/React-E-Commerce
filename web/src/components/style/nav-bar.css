@@ -1,8 +1,9 @@
 #nav-bar{
     border: 0.01rem solid #d3d3d3;
     z-index: 3;
+    position: fixed;
     background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302); /* Adds a subtle shadow */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302);
 }
 
 
@@ -45,9 +46,11 @@
     width: 30%;
     min-height: 25rem;
     border: 0.1rem solid gray;
-    position: absolute;
+    position: fixed;
     top: 2.5rem;
     right: 5rem;
+    z-index: 3;
+    background-color: white;
     flex-wrap: wrap;
     word-break: break-all;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302); /* Adds a subtle shadow */
@@ -105,8 +108,10 @@
 #nav-search-bar-div{
     height: 10rem;
     background-color: white;
-    z-index: 2;
+    z-index: 3;
     display: none;
+    top: 2.5rem;
+    position: fixed;
 }
 
 

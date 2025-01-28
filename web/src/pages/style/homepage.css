@@ -1,0 +1,81 @@
+#banner{
+    width: 100%;
+    aspect-ratio: 16/6;
+    background-color: #5610DE;
+    background-size: cover;
+    object-fit: cover;
+}
+
+
+
+#homepage-header{
+    font-size: 2.5rem;
+    color: gray;
+    font-weight: 300;
+}
+
+
+
+
+#homepage-seasonal-product-selection>#body{
+    width: 20%;
+    aspect-ratio: 9/12;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+
+#homepage-seasonal-product-selection>#body>#link{
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: 1;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+#homepage-seasonal-product-selection>#body:hover{
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.7);
+}
+
+
+
+#homepage-seasonal-product-selection>#body>#link>#photo{
+    height: 100%;
+    background-color: #d3d3d3;
+    z-index: 2;
+    opacity: 1;
+    display: flex;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    align-items: center;
+}
+
+
+#homepage-seasonal-product-selection>#body>#link>#photo>p{
+    font-size: 2rem;
+    color: white;
+    font-weight: 300;
+}
+
+
+#homepage-advertisement-div>#cell{
+    width: 20%;
+    border-radius: 0.3rem;
+}
+
+
+#homepage-advertisement-div>#cell>#icon{
+    font-size: 4rem;
+    word-break: keep-all;
+}
+
+
+#homepage-advertisement-div>#cell>p{
+    font-size: 1.4rem;
+    color: #949494;
+}
