@@ -5,6 +5,7 @@ import Homepage from './pages/Homepage'
 import CategorieDisplay from './pages/CategorieDisplay'
 import SearchPage from './pages/SearchPage'
 import SeasonalProducts from './pages/SeasonalProducts'
+import LoginRegister from './pages/LoginRegister'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +18,7 @@ function App() {
           <Route path='/Categorie-Display/:categorie' element={<CategorieDisplay/>}/>
           <Route path='/Search-Page/:search_text' element={<SearchPage/>}/>
           <Route path='/Seasonal-Products/:cloth_type' element={<SeasonalProducts/>}/>
+          <Route path='/Login-Register' element={<LoginRegister/>}/>
         </Routes>
       </BrowserRouter>
     </>

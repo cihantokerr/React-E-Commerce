@@ -38,7 +38,7 @@ Designing the product component(done)
 
 Step 3
 ----------------
-Coding the Homepage
+Coding the Homepage(done)
 Coding the searching page(done)
 Desgining the components like product discount banners(done)
 
@@ -53,6 +53,7 @@ Step 5
 ------------------
 Register Page
 Login Page
+(Add logging out)
 solve "Nav bar session problem"
 After Login Page
 User Profile

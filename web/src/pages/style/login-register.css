@@ -1,0 +1,126 @@
+#login-register-selection{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+@keyframes button_animation {
+    from{
+        box-shadow: none;
+    }
+    to{
+        box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+    }
+}
+
+#login-button,#register-button{
+    width: fit-content; 
+    cursor: pointer;
+    border-radius: 0.5rem;
+}
+
+
+#login-button:hover{
+    animation-name:button_animation;
+    animation-duration: 0.3s;
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+#register-button:hover{
+    animation-name:button_animation;
+    animation-duration: 0.3s;
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+#login-button>h1,#register-button>h1{
+    font-size: 2rem;
+    color: #949494;
+    font-weight: 350;
+}
+
+
+#login-form{
+    width: 30%;
+}
+
+#login-form>form{
+    width: 90%;
+    height:28rem;
+}
+
+#login-form>form>.form-group{
+    width: 100%;
+}
+
+
+#login-form>form>.form-group>input{
+    box-shadow: none;
+    border-color: #d3d3d3;
+    height: 2.5rem;
+}
+
+
+#login-form>form>.form-group>input:focus{
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+#login-form>form>#email-verification>a{
+    color: #5610DE;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+
+#login-form>form>#email-verification>a:hover{
+    text-decoration: underline;
+}
+
+#login-form>form>p{
+    font-size: 1.2rem;
+    color: #949494;
+    
+}
+
+
+
+#login-form>form>button{
+    width: 100%;
+    background-color: #5610DE;
+    border-color: #5610DE;
+}
+
+
+#login-form>form>button:hover{
+    animation-name:button_animation;
+    animation-duration: 0.3s;
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+#indicator-text{
+    font-size: 1.2rem;
+    color: #949494;
+    font-weight: 350;
+}
+
+
+#login-form>form>#register-text{
+    color: #5610DE;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+#login-form>form>#register-text:hover{
+    text-decoration: underline;
+}
+
+
+#login-or-register-text{
+    color: #949494;
+    font-size: 3rem;
+    font-weight: 350;
+}
