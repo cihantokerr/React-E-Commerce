@@ -1,0 +1,11 @@
+#categorie-header{
+    padding-top: 8%;
+}
+
+
+#categorie-header>h1{
+    color: #949494;
+    font-size: 2.5rem;
+    font-weight: 300;
+}
+

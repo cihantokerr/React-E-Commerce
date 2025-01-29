@@ -39,13 +39,13 @@ Designing the product component(done)
 Step 3
 ----------------
 Coding the Homepage
-Coding the searching page
+Coding the searching page(done)
 Desgining the components like product discount banners(done)
 
 
 Step 4
 -----------------
-Categorie Displays
+Categorie Displays(done)
 Product Displays
 
 

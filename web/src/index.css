@@ -31,7 +31,6 @@ a:hover {
 
 body {
   min-height: 100vh; /* Full height of the viewport */
-  height: 500vh;
   margin: 0; /* Remove default body margin */
 }
 

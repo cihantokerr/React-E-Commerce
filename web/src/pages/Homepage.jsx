@@ -33,10 +33,7 @@ export default function Homepage(){
             <div id="homepage-seasonal-product-selection" className='container-fluid d-flex justify-content-center align-items-center flex-row gap-5'>
 
                 <div id="body" className='container border p-0 m-0'>
-                    {
-                        //When its hovered;Info bar will
-                    }
-                    <a href="" id='link'>
+                    <a href="/Seasonal-Products/Sweater" id='link'>
                         <div style={{backgroundImage:`url(${SeasonalSelectionSweater})`}} id="photo" className='container-fluid p-0 m-0'>
                             <p>Sweaters</p>
                         </div>
@@ -46,10 +43,7 @@ export default function Homepage(){
 
 
                 <div id="body" className='container border p-0 m-0'>
-                    {
-                        //When its hovered;Info bar will
-                    }
-                    <a href="" id='link'>
+                    <a href="/Seasonal-Products/Jacket" id='link'>
                         <div style={{backgroundImage:`url(${SeasonalSelectionJackets})`}} id="photo" className='container-fluid p-0 m-0'>
                             <p>Jackets</p>
                         </div>
@@ -58,10 +52,7 @@ export default function Homepage(){
 
 
                 <div id="body" className='container border p-0 m-0'>
-                    {
-                        //When its hovered;Info bar will
-                    }
-                    <a href="" id='link'>
+                    <a href="/Seasonal-Products/Shirt" id='link'>
                         <div style={{backgroundImage:`url(${SeasonalSelectionShirts})`}} id="photo" className='container-fluid p-0 m-0'>
                             <p>Shirts</p>
                         </div>
