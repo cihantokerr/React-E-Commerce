@@ -8,10 +8,35 @@ import Banner1 from  '../assets/homepage/Banner1.png';
 import Banner2 from  '../assets/homepage/Banner2.png';
 import Banner3 from  '../assets/homepage/Banner3.png';
 import {Truck,Box,CashCoin} from 'react-bootstrap-icons'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import ProductCard from '../components/ProductCard';
+import Footer from '../components/Footer';
 
 export default function Homepage(){
 
-    //Seasonal Product Animation
+    //Getting product information for on discount section
+    var[ProductNames,setProductNames]=useState([""]);
+    var[ProductPrices,setProductPrices]=useState([""]);
+    var[ProductDiscountPercentage,setProductDiscountPercentage]=useState([""]);
+    var[ProductIDs,setProductIDs]=useState([""]);
+
+    useEffect(()=>{
+        axios.get("http://localhost:3000/Homepage/GetProductsOnDiscount",{
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        })
+
+        .then(Response=>{
+            //Splitting the product information into arrays
+            setProductIDs(JSON.stringify(Response.data.product_ids).slice(1,-1).split(","));
+            setProductNames(JSON.stringify(Response.data.product_names).slice(1,-1).split(","));
+            setProductPrices(JSON.stringify(Response.data.product_prices).slice(1,-1).split(","));
+            setProductDiscountPercentage(JSON.stringify(Response.data.discount_percentages).slice(1,-1).split(",")); 
+        });
+    },[]);
 
     return(
         <>
@@ -82,11 +107,20 @@ export default function Homepage(){
             
             <h1 id='homepage-header'>On Discount</h1>
 
-            {
-                //TODO:Code here
-            }
 
-            <div id="discounted-products-div" className="container-fluid border">Products</div>
+            <div id="discounted-products-div" className="container-fluid d-flex justify-content-around align-items-center pt-5">
+                {
+                    //Displaying the products
+                    ProductIDs.map((item,index)=>{
+
+                        return(
+                            <>
+                                <ProductCard ProductID={item} ProductName={ProductNames[index]} ProductPrice={ProductPrices[index]} DiscountPercentage={ProductDiscountPercentage[index]}/>
+                            </>
+                        )
+                    })
+                }
+            </div>
 
             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 
@@ -107,6 +141,8 @@ export default function Homepage(){
                     <p>Safe Cargo</p>
                 </div>
             </div>
+
+            <Footer/>
             
         </>
     )

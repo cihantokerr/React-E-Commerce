@@ -9,7 +9,7 @@ import jwt, { decode } from 'jsonwebtoken';
 const app=express();
 
 app.use(cors({
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true
 }));
@@ -46,6 +46,27 @@ server.connect();
 
 
 app.set('trust proxy', 1);
+
+app.get("/Homepage/GetProductsOnDiscount",function(req,res){
+
+    //Getting 3 products on discount
+    server.query("SELECT GROUP_CONCAT(product_id) as product_ids,GROUP_CONCAT(name) product_names,GROUP_CONCAT(price) as product_prices,GROUP_CONCAT(discount_percentage) as discount_percentages FROM products WHERE discount_percentage!=0.00 LIMIT 3"
+        ,function(error,result,fields){
+            if(error){
+                throw error;
+            }
+            else{
+                var ProductIDs=result[0].product_ids;
+                var ProductNames=result[0].product_names;
+                var ProductPrices=result[0].product_prices;
+                var DiscountPercentages=result[0].discount_percentages;
+
+                //Sending data to the client
+                res.json({product_ids:ProductIDs,product_names:ProductNames,product_prices:ProductPrices,discount_percentages:DiscountPercentages});
+            }
+        }
+    );
+});
 
 
 app.get("/CategorieDisplay/GetProducts",function(req,res){
@@ -122,6 +143,9 @@ app.get("/SeasonalProducts/GetProducts",function(req,res){
         }
     );
 });
+
+
+
 
 app.listen(3000,function(){
 

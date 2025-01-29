@@ -1,11 +1,24 @@
 #product-card-body{
     width: 25%;
     height: 33rem;
-    border: 0.01rem solid #d3d3d3;
+    border: 0.00rem solid #d3d3d3;
+}
+
+
+@keyframes product_card_animation {
+    from{
+        box-shadow: 0 0px 0px rgba(11, 0, 10, 0.9);
+    }
+
+    to{
+        box-shadow: 0 4px 6px rgba(11, 0, 10, 0.9);
+    }
 }
 
 
 #product-card-body:hover{
+    animation-name:product_card_animation;
+    animation-duration: 0.3s;
     box-shadow: 0 4px 6px rgba(11, 0, 10, 0.9);
 }
 

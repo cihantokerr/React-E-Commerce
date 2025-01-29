@@ -53,6 +53,7 @@ Step 5
 ------------------
 Register Page
 Login Page
+solve "Nav bar session problem"
 After Login Page
 User Profile
 

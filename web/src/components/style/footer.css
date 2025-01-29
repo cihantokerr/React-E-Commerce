@@ -1,0 +1,30 @@
+@keyframes footer_animation {
+    from{
+        color: #949494;
+    }
+    to{
+        color: #5610DE;
+    }
+}
+
+#footer-icon{
+    color: #949494;
+}
+
+#footer-icon:hover{
+    animation-name: footer_animation;
+    animation-duration: 0.3s;
+    color: #5610DE;
+}
+
+
+#footer-links{
+    color: #949494;
+}
+
+
+#footer-links:hover{
+    animation-name: footer_animation;
+    animation-duration: 0.3s;
+    color: #5610DE;
+}
