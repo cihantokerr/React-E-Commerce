@@ -6,6 +6,7 @@ import CategorieDisplay from './pages/CategorieDisplay'
 import SearchPage from './pages/SearchPage'
 import SeasonalProducts from './pages/SeasonalProducts'
 import LoginRegister from './pages/LoginRegister'
+import AfterLogin from './pages/AfterLogin'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +20,7 @@ function App() {
           <Route path='/Search-Page/:search_text' element={<SearchPage/>}/>
           <Route path='/Seasonal-Products/:cloth_type' element={<SeasonalProducts/>}/>
           <Route path='/Login-Register' element={<LoginRegister/>}/>
+          <Route path='/After-Login' element={<AfterLogin/>}/>
         </Routes>
       </BrowserRouter>
     </>

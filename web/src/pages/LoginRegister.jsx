@@ -3,6 +3,7 @@ import NavBar from '../components/NavBar'
 import './style/login-register.css'
 import axios from 'axios';
 
+
 export default function LoginRegister(){
 
     var[IsLoginOnDisplay,setIsLoginOnDisplay]=useState(true);
@@ -28,11 +29,28 @@ export default function LoginRegister(){
 
 
     //Handle Login
-    function Login(){
+    function Login(e){
+        
+        e.preventDefault();
 
-        axios.post("http://localhost:3000/Login",{
+        axios.post("http://localhost:3000/Register-Login/Login",{
             email_value:user.email,
+            password_value:user.password
+        },{withCredentials:true})
+
+        .then((Response)=>{
             
+            var UserCount=Response.data.user_count;
+
+            //If UserCount is 1,Take user to /After-Login
+            if(UserCount==1){
+                window.location.href="/After-Login";
+            }
+
+            else{
+
+                alert("User Is Not Found With Given Information.");
+            }
         });
     }
 

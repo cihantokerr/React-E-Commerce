@@ -66,3 +66,6 @@ Payment Page
 
 
 
+Step 7
+------------------
+Security And Encryption

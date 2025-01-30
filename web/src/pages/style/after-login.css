@@ -1,0 +1,12 @@
+#banner{
+    width: 100%;
+    aspect-ratio: 16/6;
+    background-color: #5610DE;
+    background-size: cover;
+    object-fit: cover;
+}
+
+
+#after-login-body>#category-body{
+    background-color: red;
+}
