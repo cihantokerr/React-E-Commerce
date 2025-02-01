@@ -16,6 +16,22 @@ export default function NavBar(){
 
     const navigate=useNavigate();
 
+    const GetSession=async()=>{
+        await axios.post("http://localhost:3000/GetSession",{},{
+            withCredentials:true
+        })
+
+        .then(Response=>{
+            setIsSessionNull(Response.data.has_user_logined);
+            
+        });    
+    }
+
+    //Getting the session and checking it for security
+    useEffect(()=>{
+        GetSession();
+    },[]);
+
 
     return(
         <>

@@ -5,12 +5,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import bodyParser from 'body-parser';
 import jwt from  'jsonwebtoken';
-import { decrypt, encrypt } from './Encryption.js';
+import env from 'dotenv'
+import { HashData } from './Encryption.js';
 
 const app=express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_LINK,
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true
 }));
@@ -169,14 +170,7 @@ app.post("/Register-Login/Login",function(req,res){
                     else{
 
                         var UserID=result[0].user_id;
-
-                        //!asd
-                        console.log("UserID:",UserID);
                         
-                        
-                        
-                        //TODO:Encrypt
-
                         const token = jwt.sign({userId:encrypt(UserID)}, 'secret_key', { expiresIn: '1h'});
 
                         const decoded = jwt.verify(token, "secret_key");
@@ -209,9 +203,48 @@ app.post("/Register-Login/Login",function(req,res){
 });
 
 
+app.post("/Register-Login/Register",function(req,res){
+
+    var User=req.body.register_values;
+    
+
+    //Getting the user count for the same phone number
+   server.query("SELECT COUNT(*) FROM users WHERE phone_number=?",[User.phone_number],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            var PhoneCount=result[0]['COUNT(*)'];
+
+            //Getting the user count for same phone number
+            server.query("SELECT COUNT(*) FROM users WHERE email=?",[User.email],function(error,result,fields){
+                if(error){
+                    throw error;
+                }
+                else{
+
+                    var EmailCount=result[0]['COUNT(*)'];
+
+                    //Register the user if there is no same email or phone number
+                    server.query();
+                    
+
+                    //Sending data to the client
+                    res.json({email_count:EmailCount,phone_count:PhoneCount});
+                }
+            });
+        }
+   });
+    
+    
+});
+
 
 
 app.post("/GetSession",function(req,res){
+
+    console.log("Hashed data:"+HashData("cihantoker"));
+    
 
     var token=req.cookies.token;
     

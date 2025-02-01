@@ -47,7 +47,7 @@
 
 #login-form>form{
     width: 90%;
-    height:28rem;
+    min-height:28rem;
 }
 
 #login-form>form>.form-group{
@@ -59,6 +59,18 @@
     box-shadow: none;
     border-color: #d3d3d3;
     height: 2.5rem;
+}
+
+
+#login-form>form>.form-group>.form-control>option{
+    box-shadow: none;
+    border-color: #d3d3d3;
+    height: 2.5rem;
+}
+
+
+#login-form>form>.form-group>.form-control>option:focus{
+    background-color: #5610DE;
 }
 
 
@@ -84,6 +96,17 @@
     
 }
 
+#login-form>form>.form-group>textarea{
+    box-shadow: none;
+    border-color: #d3d3d3;
+    resize: none;
+}
+
+
+#login-form>form>.form-group>textarea:focus{
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+  
 
 
 #login-form>form>button{
