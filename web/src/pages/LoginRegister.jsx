@@ -25,7 +25,12 @@ export default function LoginRegister(){
         date_of_birth:"",
     });
 
-    <input onChange={(e)=>{SetUser()}} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+
+    var[User,setUser]=useState({
+        email:'',
+        password:''
+    });
+  
 
     //If login form is not opened;Open login form
     function DisplayLoginForm(){
@@ -46,25 +51,24 @@ export default function LoginRegister(){
     //Handle Login
     function Login(e){
         
-        e.preventDefault();
+        e.preventDefault()
 
-        axios.post("http://localhost:3000/Register-Login/Login",{
-            email_value:user.email,
-            password_value:user.password
+
+       axios.post("http://localhost:3000/Register-Login/Login",{
+            email_value:User.email,
+            password_value:User.password
         },{withCredentials:true})
 
         .then((Response)=>{
             
-            var UserCount=Response.data.user_count;
-
-            //If UserCount is 1,Take user to /After-Login
-            if(UserCount==1){
+            var IsUserFound=Response.data.is_user_found;
+            
+            if(IsUserFound){
                 window.location.href="/After-Login";
             }
 
             else{
-
-                alert("User Is Not Found With Given Information.");
+                alert("No user is found with the given information");
             }
         });
     }
@@ -134,12 +138,12 @@ export default function LoginRegister(){
 
                     <div class="form-group pt-0">
                     
-                        <input onChange={(e) => SetUser(prevState => ({ ...prevState, email: e.target.value }))} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                        <input onChange={(e) => setUser(prevState => ({ ...prevState, email: e.target.value }))} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
                     </div>
 
                     <br /><br />
                     <div class="form-group">
-                        <input onChange={(e)=>SetUser(prev=>({...prev,password:e.target.value}))} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
+                        <input onChange={(e)=>setUser(prev=>({...prev,password:e.target.value}))} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
                     </div>
                     
 

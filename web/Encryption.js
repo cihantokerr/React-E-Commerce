@@ -10,7 +10,9 @@ const hashedValue = async (data) => {
     }
 };
 
-//var Hashed= await hashedValue("asadasdasd");
+var Hashed= await hashedValue("asadasdasd");
+
+
 
 
 const CompareHash = async (hashedData, plainData) => {
@@ -22,7 +24,10 @@ const CompareHash = async (hashedData, plainData) => {
 };
 
 
-//var Comp=await CompareHash("$2b$10$irlRNhId.5L3tAI0hCryRexy30K9aSSNwkp6DvFtgrARWidcmqHhW","asadasdasd");
+
+
+
+var Comp=await CompareHash("$2b$10$M4TmdjmOrPLOIgn2UuSAT.1grnGUW2lYwCi5aLu0RK3GKYN0WW/B6","1234");
 
 
 export{CompareHash,hashedValue}

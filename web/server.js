@@ -5,13 +5,12 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import bodyParser from 'body-parser';
 import jwt from  'jsonwebtoken';
-import env from 'dotenv'
-import { HashData } from './Encryption.js';
+import { CompareHash, hashedValue } from './Encryption.js'
 
 const app=express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_LINK,
+    origin: 'http://localhost:5173',
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true
 }));
@@ -148,55 +147,54 @@ app.get("/SeasonalProducts/GetProducts",function(req,res){
 
 
 
-app.post("/Register-Login/Login",function(req,res){
+app.post("/Register-Login/Login", async function(req,res){
 
     var EmailValue=req.body.email_value;
-    var PasswordValue=req.body.password_value;
+    var PasswordValue= req.body.password_value;
+    
+    
 
-    //Getting the count of the users
-    server.query("SELECT COUNT(*) FROM users WHERE email=? AND password=?",[EmailValue,PasswordValue],function(error,result,fields){
+    //Getting the count of the users with the email
+    server.query("SELECT COUNT(*) as user_count,email,password,user_id FROM users WHERE email=?",[EmailValue],async function(error,result,fields){
         if(error){
             throw error;
         }
         else{
-            var UserCount=result[0]['COUNT(*)'];
 
-            if(UserCount==1){
-                //Get userID and store it into a session
-                server.query("SELECT user_id FROM users WHERE email=?",[EmailValue],function(error,result,fields){
-                    if(error){
-                        throw error;
-                    }
-                    else{
+            var Usercount=result[0].user_count;
+        
+            //If user is found;Compare the passsword
+            if(Usercount==1){
 
-                        var UserID=result[0].user_id;
-                        
-                        const token = jwt.sign({userId:encrypt(UserID)}, 'secret_key', { expiresIn: '1h'});
+                var DatabasePassword=(result[0].password);
 
-                        const decoded = jwt.verify(token, "secret_key");
-                        const decryptedUserId = decrypt(decoded.userId);
-                        
-                        console.log("Decrypted:"+decryptedUserId);
-                        
 
-                        res.cookie("token", token, {
-                            httpOnly: true, // Prevent access from JS (important for security)
-                            secure: false, // Change to `true` in production with HTTPS
-                            sameSite: "lax"
-                        });
+                //Comparing the inputted password and password in the database
+                var IsUserFound= await CompareHash(DatabasePassword,PasswordValue);
 
-                        //Send UserCount to the client
-                        res.json({user_count:UserCount});
-                    }
-                });
-                
+                //If user is found;Display a message and save user_id as session
+                if(IsUserFound){
+                   
+                    console.log("User is found"); //!Delete this after production
+
+                    var UserID=result[0].user_id;
+                    
+                    var token=jwt.sign({user_id:UserID},'secret_key');//!Change the secret key after production
+                    res.cookie("token",token);
+
+                    res.json({is_user_found:true});
+                }
+
+                else{
+                    res.json({is_user_found:false});
+                }
             }
 
             else{
-
-                res.json({user_count:UserCount});
+                res.json({is_user_found:false});
             }
 
+            
         }
     });
     
@@ -242,8 +240,6 @@ app.post("/Register-Login/Register",function(req,res){
 
 
 app.post("/GetSession",function(req,res){
-
-    console.log("Hashed data:"+HashData("cihantoker"));
     
 
     var token=req.cookies.token;
