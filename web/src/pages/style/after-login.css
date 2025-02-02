@@ -7,6 +7,74 @@
 }
 
 
-#after-login-body>#category-body{
-    background-color: red;
+
+#after-login-body>#categorie-selection-bar>h1{
+    color: #949494;
+    font-weight: 300;
+    font-size: 2rem;
+}
+
+
+#after-login-body>#categorie-selection-bar>#categories-div>#categorie-selection{
+    width: fit-content;
+}
+
+
+#after-login-body>#categorie-selection-bar>#categories-div>#categorie-selection>input{
+    width: 1.2rem;
+    height: 1.2rem;
+    border-color: #d3d3d3;
+}
+
+
+#after-login-body>#categorie-selection-bar>#categories-div>#categorie-selection>input:focus{
+    box-shadow: none;
+}
+
+#after-login-body>#categorie-selection-bar>#categories-div>#categorie-selection>input:checked{
+    background-color: #5610DE;
+}
+
+
+#after-login-body>#categorie-selection-bar>#categories-div>#categorie-selection>label{
+    font-size: 1.1rem;
+}
+
+
+#after-login-body>#cloth-type-selection-div>h1{
+    color: #949494;
+    font-weight: 300;
+    font-size: 2rem;
+}
+
+
+
+
+
+
+
+
+#after-login-body>#cloth-type-selection-div>#cloth-types-div>#categorie-selection{
+    width: fit-content;
+}
+
+
+#after-login-body>#cloth-type-selection-div>#cloth-types-div>#categorie-selection>input{
+    width: 1.2rem;
+    height: 1.2rem;
+    border-color: #d3d3d3;
+}
+
+
+#after-login-body>#cloth-type-selection-div>#cloth-types-div>#categorie-selection>input:focus{
+    box-shadow: none;
+}
+
+#after-login-body>#cloth-type-selection-div>#cloth-types-div>#categorie-selection>input:checked{
+    background-color: #5610DE;
+}
+
+
+#after-login-body>#cloth-type-selection-div>#cloth-types-div>#categorie-selection>label{
+    font-size: 1.1rem;
 }

@@ -296,6 +296,40 @@ app.get("/After-Login/GetProducts",function(req,res){
 
 
 
+app.get("/After-Login/GetProducts",function(req,res){
+
+    server.query("SELECT GROUP_CONCAT(product_id) as product_ids,GROUP_CONCAT(name) product_names,GROUP_CONCAT(price) as product_prices,GROUP_CONCAT(discount_percentage) as discount_percentages from products",function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            var ProductIDs=result[0].product_ids;
+            var ProductNames=result[0].product_names;
+            var ProductPrices=result[0].product_prices;
+            var DiscountPercentages=result[0].discount_percentages;
+            
+            //Sending data to the client
+            res.json({product_ids:ProductIDs,product_names:ProductNames,product_prices:ProductPrices,discount_percentages:DiscountPercentages});
+        }
+    });
+});
+
+
+
+app.get("/After-Login/GetSpesificProducts",function(req,res){
+
+    var Categorie=req.query.Categorie;
+    var ClothType=req.query.ClothType;
+
+    var query="SELECT GROUP_CONCAT(product_id) as product_ids,GROUP_CONCAT(name) product_names,GROUP_CONCAT(price) as product_prices,GROUP_CONCAT(discount_percentage) as discount_percentages from products WHERE "
+    
+    console.log(Categorie);
+
+    
+    
+});
+
+
 app.listen(3000,function(){
 
     console.log("Server is working...");
