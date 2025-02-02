@@ -179,7 +179,7 @@ app.post("/Register-Login/Login", async function(req,res){
 
                     var UserID=result[0].user_id;
                     
-                    var token=jwt.sign({user_id:UserID},'secret_key');//!Change the secret key after production
+                    var token=jwt.sign({user_id:UserID},'secret_key',{expiresIn:"1h"});//!Change the secret key after production
                     res.cookie("token",token);
 
                     res.json({is_user_found:true});
@@ -240,9 +240,8 @@ app.post("/Register-Login/Register",function(req,res){
 
 
 app.post("/GetSession",function(req,res){
-    
-
     var token=req.cookies.token;
+    
     
     if(token){
         res.json({has_user_logined:true});
@@ -252,6 +251,24 @@ app.post("/GetSession",function(req,res){
     }
 });
 
+
+app.post("/LogOff",function(req,res){
+
+    var IsCookieCleared=false;
+
+    //Destroying the cookie and sending the success message to the client
+    try{
+        res.clearCookie("token");
+        IsCookieCleared=true;
+    }
+
+    catch{
+        IsCookieCleared=false;
+    }
+
+    res.send({is_cookie_cleared:IsCookieCleared});
+
+});
 
 
 app.get("/After-Login/GetProducts",function(req,res){

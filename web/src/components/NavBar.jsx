@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import './style/nav-bar.css'
-import {Search,Person,Bag} from 'react-bootstrap-icons'
+import {Search,Person,Bag,Unlock} from 'react-bootstrap-icons'
 import { useEffect, useState } from 'react'
 import {useNavigate} from 'react-router-dom';
 import ShoppingCartProduct from './ShoppingCartProduct';
@@ -8,9 +8,12 @@ import axios from 'axios';
 
 export default function NavBar(){
 
-    var[IsSessionNull,setIsSessionNull]=useState(true);
+    var[HasUserLogined,setHasUserLogined]=useState(false);
     var[IsSearchBarOnDisplay,setIsSearchBarOnDisplay]=useState(false);
     var[IsShoppingCartOnDisplay,setIsShoppingCartOnDisplay]=useState(false);
+    var IsCookieCleared=null;
+
+    var HasUserLoginedValue=false;//Used this to set the usestate value inside of a useeffect
 
     var[SearchBarValue,setSearchBarValue]=useState("");
 
@@ -22,8 +25,8 @@ export default function NavBar(){
         })
 
         .then(Response=>{
-            setIsSessionNull(Response.data.has_user_logined);
-            
+            HasUserLoginedValue=Response.data.has_user_logined;
+            setHasUserLogined(HasUserLoginedValue);
         });    
     }
 
@@ -33,11 +36,36 @@ export default function NavBar(){
     },[]);
 
 
+
+    //A function to log the user off
+    function LogOff(){
+
+        axios.post("http://localhost:3000/LogOff",{},{
+            withCredentials:true
+        })
+
+        .then((Response)=>{
+
+            IsCookieCleared=Response.data.is_cookie_cleared;
+
+            //Re-direct user to the main page if cookies cleared successfully
+            if(IsCookieCleared){
+                alert("You successfully logged off...");
+                window.location.href="/";
+            }            
+            else{
+                alert("An error occured on logging off.");
+            }
+        });
+    }
+
+
+
     return(
         <>
             <div id='nav-bar' className="container-fluid d-flex justify-content-around align-items-center pt-2 pb-2 border">
                 
-                <a href={IsSessionNull ? '/' :'/AfterLogin'}>Homepage</a>
+                <a href={HasUserLogined ? '/After-Login' :'/'}>Homepage</a>
                 <a href="/Categorie-Display/Men">Men</a>
                 <a href="/Categorie-Display/Women">Women</a>
                 <a href="/Categorie-Display/Boys">Boys</a>
@@ -48,22 +76,31 @@ export default function NavBar(){
 
                     //If not;User Profile Icon will be displayed
                 }
-                <a style={{display:IsSessionNull ? 'block':'none'}} href="/Login-Register">Login/Register</a>
+                <a style={{display:HasUserLogined ? 'none':'block'}} href="/Login-Register">Login/Register</a>
 
-                <Person style={{display: IsSessionNull ? 'none' :'block'}} onClick={()=>{navigate("/User-Profile")}} id='icon'/>
+                <Person title='Go To Your User Profile' style={{display: HasUserLogined ? 'block' :'none'}} onClick={()=>{navigate("/User-Profile")}} id='icon'/>
 
 
                 {
                     //Closes the shopping-cart if its open;Opens shopping-cart if its closed
                 }
                 
-                <Bag onClick={()=>{setIsShoppingCartOnDisplay(!IsShoppingCartOnDisplay)}} style={{display: IsSessionNull ? 'none' :'block'}} id='icon' size={"1.1rem"}/>
+                <Bag title='Display Your Shopping Cart' onClick={()=>{setIsShoppingCartOnDisplay(!IsShoppingCartOnDisplay)}} style={{display: HasUserLogined ? 'block' :'none'}} id='icon' size={"1.1rem"}/>
 
 
                 {
                     //Closes the search-bar if its open;Opens the search bar if its closed
                 }
-                <Search onClick={()=>{setIsSearchBarOnDisplay(!IsSearchBarOnDisplay)}} id='search-icon'/>
+                <Search title='Search For a Product' onClick={()=>{setIsSearchBarOnDisplay(!IsSearchBarOnDisplay)}} id='search-icon'/>
+
+                {
+                    /**
+                     * User is going to log off with clicking it
+                     * If there is no login;It is not going to appear
+                     */
+                    
+                }
+                <Unlock style={{display:HasUserLogined ? 'block':'none'}} title='Log Off' onClick={LogOff} id='search-icon'/>
             </div>
 
             <div style={{display:IsShoppingCartOnDisplay ? 'block':'none'}} id="nav-bar-shopping-cart" className="container border p-0 m-0">
@@ -93,6 +130,7 @@ export default function NavBar(){
             {
                 //When user clicks on search button;Classname will be set to d-flex from d-none to display the search bar
             }
+
             <div id="nav-search-bar-div" className={IsSearchBarOnDisplay ? 'container-fluid border d-flex justify-content-center align-items-center' : 'container-fluid border d-none justify-content-center align-items-center'}>
 
                 {
