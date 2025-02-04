@@ -32,10 +32,12 @@ const encryptAES = (text) => {
   
 
 
+
 const decryptAES = (cipherText) => {
     const bytes = CryptoJS.AES.decrypt(cipherText, "secretKey");
     return bytes.toString(CryptoJS.enc.Utf8);
 };
+
 
 
 

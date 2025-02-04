@@ -78,3 +78,19 @@
 #after-login-body>#cloth-type-selection-div>#cloth-types-div>#categorie-selection>label{
     font-size: 1.1rem;
 }
+
+
+
+#after-login-body>#cloth-type-selection-div>#search-button-div>button{
+    background-color: #5610DE;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+
+#after-login-body>#cloth-type-selection-div>#search-button-div>button:hover{
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.302);
+}

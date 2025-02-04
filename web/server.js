@@ -271,29 +271,6 @@ app.post("/LogOff",function(req,res){
 });
 
 
-app.get("/After-Login/GetProducts",function(req,res){
-    
-
-    //Getting the products
-    server.query("SELECT GROUP_CONCAT(product_id) AS product_ids, GROUP_CONCAT(name) AS product_names, GROUP_CONCAT(price) AS product_prices, GROUP_CONCAT(discount_percentage) AS discount_percentages FROM products"
-        ,function(error,result,fields){
-            if(error){
-                throw error;
-            }
-
-            else{
-                var ProductIDs=result[0].product_ids;
-                var ProductNames=result[0].product_names;
-                var ProductPrices=result[0].product_prices;
-                var DiscountPercentages=result[0].discount_percentages;
-                
-                //Sending data to the client
-                res.json({product_ids:ProductIDs,product_names:ProductNames,product_prices:ProductPrices,discount_percentages:DiscountPercentages});
-            }
-        }
-    );
-});
-
 
 
 app.get("/After-Login/GetProducts",function(req,res){
@@ -318,15 +295,75 @@ app.get("/After-Login/GetProducts",function(req,res){
 
 app.get("/After-Login/GetSpesificProducts",function(req,res){
 
-    var Categorie=req.query.Categorie;
-    var ClothType=req.query.ClothType;
+    //Getting the values from the client and putting everything into an array
+    var Categories=req.query.Categorie;
+    var ClothTypes=req.query.ClothType;
+
+    var CategoriesQueryString="";
+    var ClothTypesQueryString="";
+
 
     var query="SELECT GROUP_CONCAT(product_id) as product_ids,GROUP_CONCAT(name) product_names,GROUP_CONCAT(price) as product_prices,GROUP_CONCAT(discount_percentage) as discount_percentages from products WHERE "
     
-    console.log(Categorie);
+    //If user has selected any categories;Add IN() function on query
+    if(Categories.length!=0){
 
-    
-    
+        //Generating the query string
+        for(var i=0;i<Categories.length;i++){
+
+            CategoriesQueryString=CategoriesQueryString+`'${Categories[i]}'`
+
+            //Adding the ',' to the string if the system is not on the last loop
+            if(i<Categories.length-1){
+                CategoriesQueryString=CategoriesQueryString+",";
+            }
+        }
+
+        query=query+` category IN(${CategoriesQueryString})`;
+    }
+
+    if(ClothTypes.length!=0){
+
+        //Generate the query string
+        for(var i=0;i<ClothTypes.length;i++){
+
+            ClothTypesQueryString=ClothTypesQueryString+`'${ClothTypes[i]}'`
+
+            //Adding the ',' to the string if the system is not on the last loop
+            if(i<ClothTypes.length-1){
+                ClothTypesQueryString=ClothTypesQueryString+",";
+            }
+        }
+
+
+        //If user has not selected any categories;Add 'AND' attribute on query;If not; Add IN() only
+        if(Categories.length!=0){
+
+            query=query+` AND cloth_type IN(${ClothTypesQueryString})`;
+        }
+
+        else{
+
+            query=query+` cloth_type IN(${ClothTypesQueryString})`;
+        }
+    }
+
+
+    server.query(query,function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            var ProductIDs=result[0].product_ids;
+            var ProductNames=result[0].product_names;
+            var ProductPrices=result[0].product_prices;
+            var DiscountPercentages=result[0].discount_percentages;
+            
+            
+            //Sending data to the client
+            res.json({product_ids:ProductIDs,product_names:ProductNames,product_prices:ProductPrices,discount_percentages:DiscountPercentages});
+        }
+    });
 });
 
 
