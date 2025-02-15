@@ -149,7 +149,7 @@ export default function UserProfile(){
                                 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Password
-                                        <a href="">(Click Here To Change It)</a>
+                                        <a href="/Change-Password">(Click Here To Change It)</a>
                                     </label>
                                     <input type="password" value={""} disabled class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder=""/>
                                 </div>

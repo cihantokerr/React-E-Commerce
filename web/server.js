@@ -479,6 +479,36 @@ app.post("/User-Profile/ChangeUserEmail",function(req,res){
 });
 
 
+app.post("/User-Profile/ChangeUserPassword",function(req,res){
+
+    var OldPassword=req.body.old_password_value;
+    var NewPassword=req.body.new_password_value;
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    console.log("Old:"+OldPassword);
+    console.log("New:"+NewPassword);
+    
+    
+
+
+    //Getting password from database
+    server.query("SELECT password AS database_password FROM users WHERE user_id=?"[decryptAES(IDSession)], async function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+
+            var DatabasePassword=result[0].database_password;
+
+            console.log(DatabasePassword);
+            
+            
+        }
+    });
+});
+
+
 app.listen(3000,function(){
 
     console.log("Server is working...");

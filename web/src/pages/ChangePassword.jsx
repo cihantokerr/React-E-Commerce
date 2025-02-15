@@ -1,4 +1,6 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState,useEffect } from "react";
+import './style/change-email.css'
 
 export default function ChangePassword(){
 
@@ -6,24 +8,53 @@ export default function ChangePassword(){
     var[OldPassword,setOldPassword]=useState("");
 
     //Getting session for security;If there is no session;Re-direct user to homepage
-    /*useEffect(()=>{
+    useEffect(()=>{
         axios.post("http://localhost:3000/GetSession",{},{
             withCredentials:true
         })
-
         .then(Response=>{
             //Take user back to the homepage if session is not found
             if(!Response.data.has_user_logined){
                 alert("No Session Found.");
                 window.location.href="/";
             }
-        });        
-    },[]);*/
+        });
+    },[]);
 
+    function ChangePassword(e){
+
+        e.preventDefault();
+
+        axios.post("http://localhost:3000/User-Profile/ChangeUserPassword",{old_password_value:OldPassword,new_password_value:Password},{withCredentials:true})
+
+        .then((Response)=>{
+            alert("");
+        });
+    }
 
     return(
         <>
-            asdasd
+            <div id="change-email-body" className='container-fluid'>
+                <br /><br /><br />
+
+                <h1 id="header" className='text-center'>Change Your Password</h1>
+
+                <form onSubmit={ChangePassword} className='d-flex justify-content-center align-items-center flex-column pt-5'>
+                    <div id='form-group' class="form-group w-50">
+                        <label for="exampleInputEmail1">New Password</label>
+                        <input onChange={(e)=>{setPassword(e.target.value)}} required type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                        <br />
+                        <br />
+                    </div>
+                    <div id='form-group' class="form-group w-50">
+                        <label for="exampleInputPassword1">Current Password</label>
+                        <input onChange={(e)=>{setOldPassword(e.target.value)}} required type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
+                    </div>
+                    <br />
+                    <br />
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </form>
+            </div>
         </>
     )
 }
