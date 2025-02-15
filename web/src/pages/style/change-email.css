@@ -1,0 +1,44 @@
+#change-email-body>#header{
+    color: #949494;
+    font-weight: 350;
+    font-size: 3rem;
+}
+
+
+#change-email-body>form>#form-group>input{
+    width: 100%;
+    box-shadow: none;
+    border-color: #d3d3d3;
+}
+
+
+#change-email-body>form>#form-group>input:focus{
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+
+@keyframes button_animation {
+    from{
+        box-shadow: none;
+    }
+    to{
+        box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+    }
+}
+
+
+#change-email-body>form>button:hover{
+    animation-name:button_animation;
+    animation-duration: 0.3s;
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+#change-email-body>form>button{
+    background-color: #5610DE;
+    border-color: #5610DE;
+}
+
+
+

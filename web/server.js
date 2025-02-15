@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import bodyParser from 'body-parser';
 import jwt from  'jsonwebtoken';
-import { CompareHash, hashedValue } from './Encryption.js'
+import { CompareHash, decryptAES, encryptAES, hashedValue } from './Encryption.js'
 
 const app=express();
 
@@ -174,12 +174,10 @@ app.post("/Register-Login/Login", async function(req,res){
 
                 //If user is found;Display a message and save user_id as session
                 if(IsUserFound){
-                   
-                    console.log("User is found"); //!Delete this after production
 
                     var UserID=result[0].user_id;
                     
-                    var token=jwt.sign({user_id:UserID},'secret_key',{expiresIn:"1h"});//!Change the secret key after production
+                    var token=jwt.sign({user_id:encryptAES(UserID)},'secret_key',{expiresIn:"1h"});//!Change the secret key after production
                     res.cookie("token",token);
 
                     res.json({is_user_found:true});
@@ -362,6 +360,120 @@ app.get("/After-Login/GetSpesificProducts",function(req,res){
             
             //Sending data to the client
             res.json({product_ids:ProductIDs,product_names:ProductNames,product_prices:ProductPrices,discount_percentages:DiscountPercentages});
+        }
+    });
+});
+
+
+app.post("/User-Profile/GetUserInformation",function(req,res){
+
+    var token=req.cookies.token;
+
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    
+
+    //Getting the informations
+    server.query("SELECT * FROM users WHERE user_id=?",[decryptAES(IDSession)],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+
+            //Sending values to the server            
+            res.json({
+                user_id: result[0].user_id,
+                first_name: decryptAES(result[0].first_name),
+                last_name: decryptAES(result[0].last_name),
+                email: result[0].email,
+                password:result[0].password,
+                phone_number: decryptAES(result[0].phone_number),
+                address_line_1: decryptAES(result[0].address_line_1),
+                address_line_2: decryptAES(result[0].address_line_2),
+                city: decryptAES(result[0].city),
+                zip_code: decryptAES(result[0].zip_code),
+                gender: decryptAES(result[0].gender),
+                date_of_birth: decryptAES(result[0].date_of_birth),
+                account_created_at: decryptAES(result[0].account_created_at),
+                shopping_cart: (result[0].shopping_cart),
+                card_name: decryptAES(result[0].card_name),
+                card_number: decryptAES(result[0].card_number),
+                card_exp_date: decryptAES(result[0].card_exp_date),
+                CVV: decryptAES(result[0].CVV),
+            });
+            
+        }
+    });
+    
+    
+});
+
+
+app.post("/User-Profile/ChangeUserInformation",function(req,res){
+    var User=req.body.user_values;    
+    console.log(User);
+});
+
+
+app.post("/User-Profile/ChangeUserEmail",function(req,res){
+
+    var Email=req.body.email_value;
+    var Password=req.body.password_value;
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+
+    //Checking that inputted email is not used by another user
+    server.query("SELECT COUNT(*) FROM users WHERE email=?",[Email],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+
+            var EmailCount=result[0]['COUNT(*)'];
+
+            if(EmailCount==1){
+                res.json({email_count:EmailCount});
+            }
+
+            else{
+                
+                //Getting the password of the user to check that user entered their password correctly
+                server.query("SELECT password as database_password FROM users WHERE user_id=?",[decryptAES(IDSession)], async function(error,result,fields){
+                    if(error){
+                        throw error;
+                    }
+                    else{
+
+                        var DatabasePassword=result[0].database_password;
+
+                        //Checking that both passwords match
+                        var HasPasswordsMatched= await CompareHash(DatabasePassword,Password);
+
+                        console.log(HasPasswordsMatched);
+                        
+
+                        if(!HasPasswordsMatched){
+
+                            res.json({has_passwords_matched:false});
+                        }
+
+                        else{
+
+                            //Changing the user email
+                            server.query("UPDATE users SET email=? WHERE user_id=?",[Email,decryptAES(IDSession)],function(error,result,fields){
+
+                                if(error){
+                                    throw error;
+                                }
+                                else{
+                                    res.json({has_email_changed:true});
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         }
     });
 });

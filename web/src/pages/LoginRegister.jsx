@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import './style/login-register.css'
 import axios from 'axios';
@@ -8,6 +8,18 @@ export default function LoginRegister(){
     var[IsLoginOnDisplay,setIsLoginOnDisplay]=useState(true);
     var[HashedData,setHashedData]=useState("");
     var[DataComparison,setDataComparison]=useState(false);
+
+
+    //Destroying Sessions
+    useEffect(()=>{
+        axios.post("http://localhost:3000/LogOff",{},{
+            withCredentials:true
+        })
+
+        .then((Response)=>{
+            IsCookieCleared=Response.data.is_cookie_cleared;
+        });
+    },[]);
 
 
 

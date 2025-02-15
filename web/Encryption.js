@@ -39,7 +39,4 @@ const decryptAES = (cipherText) => {
 };
 
 
-
-
-
 export{CompareHash,hashedValue,encryptAES,decryptAES}
