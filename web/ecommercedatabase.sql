@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2025 at 12:50 PM
+-- Generation Time: Feb 19, 2025 at 10:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,53 @@ SET time_zone = "+00:00";
 --
 -- Database: `ecommercedatabase`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `address`
+--
+
+CREATE TABLE `address` (
+  `AddressID` int(11) NOT NULL,
+  `UserID` varchar(60) NOT NULL,
+  `IsDeleted` tinyint(1) DEFAULT 0,
+  `IsPriority` tinyint(1) DEFAULT 0,
+  `Address` varchar(300) NOT NULL,
+  `City` varchar(300) NOT NULL,
+  `ZIP_Code` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `address`
+--
+
+INSERT INTO `address` (`AddressID`, `UserID`, `IsDeleted`, `IsPriority`, `Address`, `City`, `ZIP_Code`) VALUES
+(1, '$2b$10$PrpxRiszf1cAM52tOugqf.mqOGq6aWDKfB9ylNhpIRrgzpB3Yy5QG', 0, 1, 'U2FsdGVkX19C5sqWYZoebX5nvqHpFfFkR5PMbKVD2GU=', 'U2FsdGVkX1+1OIf4WaRN9ghGkC4sBegQRUyocG1uK/U=', 'U2FsdGVkX1/FXcyjXDR4+j39epjpoz5ngEMaAUSUIT8=');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `PaymentID` int(11) NOT NULL,
+  `IsDeleted` tinyint(1) DEFAULT 0,
+  `IsPriority` tinyint(1) DEFAULT 0,
+  `UserID` int(11) NOT NULL,
+  `Card_Name` varchar(300) NOT NULL,
+  `Card_Number` varchar(300) NOT NULL,
+  `CVV` varchar(300) NOT NULL,
+  `Card_Exp_Date` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`PaymentID`, `IsDeleted`, `IsPriority`, `UserID`, `Card_Name`, `Card_Number`, `CVV`, `Card_Exp_Date`) VALUES
+(1, 0, 1, 1, 'U2FsdGVkX1/hIkTDsmh64cL71B46tdbhk8viencrg/A=', 'U2FsdGVkX1/BirBgq360Vp4jsV/h7eGGh3mrnORECbbRkUB6S+IDz/ZmT0CQY9A5', 'U2FsdGVkX1+995/KK3zRsHHHBwpR1moeygHnl44x4SA=', 'U2FsdGVkX18DbpCnNxgEa0aUa/sLktLPRx2aqn/kZd0=');
 
 -- --------------------------------------------------------
 
@@ -85,36 +132,40 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `color1`, 
 --
 
 CREATE TABLE `users` (
-  `user_id` varchar(20) DEFAULT NULL,
+  `user_id` varchar(60) DEFAULT NULL,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   `email` varchar(200) NOT NULL,
   `password` varchar(510) NOT NULL,
   `phone_number` varchar(100) NOT NULL,
-  `address_line_1` varchar(510) NOT NULL,
-  `address_line_2` varchar(510) DEFAULT NULL,
-  `city` varchar(100) NOT NULL,
-  `zip_code` varchar(40) NOT NULL,
   `gender` varchar(50) DEFAULT NULL,
   `date_of_birth` varchar(50) NOT NULL,
   `account_created_at` varchar(100) NOT NULL DEFAULT current_timestamp(),
-  `shopping_cart` varchar(500) DEFAULT NULL,
-  `card_name` varchar(500) NOT NULL,
-  `card_number` varchar(500) NOT NULL,
-  `card_exp_date` varchar(500) NOT NULL,
-  `CVV` varchar(100) NOT NULL
+  `shopping_cart` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `phone_number`, `address_line_1`, `address_line_2`, `city`, `zip_code`, `gender`, `date_of_birth`, `account_created_at`, `shopping_cart`, `card_name`, `card_number`, `card_exp_date`, `CVV`) VALUES
-('1', 'U2FsdGVkX1/lmNkNtKcICxlHhLfLJHURre2WApMSj9k=', 'U2FsdGVkX19CYl8NyUT9AxMaK1sMUKMhWFpjzbr6/P8=', 'U2FsdGVkX18TzuJXqGlaTzJ6Rd2K6uh39STVyP20uUKv81O+wQe9M9uslJw6wmKT', '$2b$10$Kv9HPr85PNG/a2biD1hatebmelAsLIl/54LP47WFYI.T6B4Vv47YC', 'U2FsdGVkX1/Hm8M68ndXtdvphXXTb/', 'U2FsdGVkX1+PIjllvJ7dqCipZQnRFZvsVuLkdmV6VM0=', 'U2FsdGVkX182ItLB2Aak72otO36tCDSzy8ba2GNeJpQ=', 'U2FsdGVkX18mL+tAapE9IpOzQQ0nydgDAP4P9qbtBc0=', 'U2FsdGVkX19Dy8LobFhEoDC/dLOptBxjYHrFOhtq', 'U2FsdGVkX1/hohkJ15xQ', 'U2FsdGVkX1/7eMC4LJDCjw6vpqGfOB6u/Rsn3tWeQag=', 'U2FsdGVkX1+nEzPPdpGx3r8Q/KISjxeVu9aRyOSOsqY=', '[value-14]', 'U2FsdGVkX1913tEzgC6CDyWazqnJgXkGUKRgxdwFwtQ=', 'U2FsdGVkX1/phYPGRcO+bzgr74dtC4D6qf6PS504/XbCMhhZv0z8QUWhq50VsvT7', 'U2FsdGVkX18YpzMMJ8vL/yZd8K7Y6BuR6g67Oix5cC8=', 'U2FsdGVkX18uV1BHphdX5WAlZlqrzC3pKYMJityb69Q=');
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `phone_number`, `gender`, `date_of_birth`, `account_created_at`, `shopping_cart`) VALUES
+('$2b$10$PrpxRiszf1cAM52tOugqf.mqOGq6aWDKfB9ylNhpIRrgzpB3Yy5QG', 'U2FsdGVkX1/lmNkNtKcICxlHhLfLJHURre2WApMSj9k=', 'U2FsdGVkX19CYl8NyUT9AxMaK1sMUKMhWFpjzbr6/P8=', 'deneme123@gmail.com', '$2b$10$bLnNxzq98h9jBBLrH8KHquyn5S7FaS6yStuKUMs7oqPPUN7ZkAqo2', 'U2FsdGVkX1+b7qisHUnngeFQUArmFxbjF33Io3gEoiQ=', 'U2FsdGVkX19+72dgCDzncbrSLyKuTOYI06LCgV43f0w=', 'U2FsdGVkX1+fGfTFCeXDasn5hC+bw6NWF1PWXDacT6c=', 'U2FsdGVkX1+nEzPPdpGx3r8Q/KISjxeVu9aRyOSOsqY=', '[value-14]');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `address`
+--
+ALTER TABLE `address`
+  ADD PRIMARY KEY (`AddressID`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`PaymentID`);
 
 --
 -- Indexes for table `products`
@@ -131,6 +182,18 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `address`
+--
+ALTER TABLE `address`
+  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `products`

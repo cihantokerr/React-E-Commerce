@@ -1,0 +1,33 @@
+1-Put payments on a seperate table(Add IsPriority column)(Create IsDeleted column to display the user's previous orders)
+
+2-Put addresses on seperate table(Add IsPriority column)(Create IsDeleted column to display the user's previous orders)
+
+3-Create Financial and Address Informations again
+
+Financial Informations
+-------------------------
+*Create a Financial Info component
+*Display financial Informations
+*Add a radio button on the corner for selecting it as priority
+*Add a delete and edit button for changing the values
+*If radio button is selected;System is going to set it as priority by Updating the column IsPriority
+*If user clicks on the edit button;Create a new page as "/Edit-Payment/PaymentID"
+
+
+Address Informations
+-------------------------
+*Create a Address Info component
+*Display address Informations
+*Add a radio button on the corner for selecting it as priority
+*Add a delete and edit button for changing the values
+*If radio button is selected;System is going to set it as priority by Updating the column IsPriority
+*If user clicks on the edit button;Create a new page as "/Edit-Address/AddressID"
+
+
+AddressID
+UserID
+IsDeleted
+IsPriority
+Address_1
+City
+ZIP_Code

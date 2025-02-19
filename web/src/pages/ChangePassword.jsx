@@ -28,7 +28,18 @@ export default function ChangePassword(){
         axios.post("http://localhost:3000/User-Profile/ChangeUserPassword",{old_password_value:OldPassword,new_password_value:Password},{withCredentials:true})
 
         .then((Response)=>{
-            alert("");
+            
+            var OldAndDatabasePasswordsmatch=Response.data.old_and_db_password_match ||true;
+
+            //Change the passwords if both values match;Display an error if they don't
+            if(OldAndDatabasePasswordsmatch){
+                alert("Password Changed Successfully! Now You Are Going Back To The Login Page...");
+                window.location.href="/Login-Register";
+            }
+
+            else{
+                alert("You Did Not Enter Your Current Password Correctly!");
+            }
         });
     }
 

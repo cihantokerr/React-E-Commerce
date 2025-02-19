@@ -4,26 +4,36 @@ import {Box, Box2, CreditCard, Person} from 'react-bootstrap-icons'
 import axios from 'axios';
 
 export default function UserProfile(){
-
-    //!Open another page for password change
-
     var[SectionOnDisplay,setSectionOnDisplay]=useState("User-Information");
 
 
     var[User,setUser]=useState({
-        User_ID:'0',
-        Name:'John',
-        Surname:'Doe',
-        Email_Address:'admin@gmail.com',
-        Gender:'M',
-        Phone_Number:'123',
+        Name:'',
+        Surname:'',
+        Email_Address:'',
+        Gender:'',
+        Phone_Number:'',
         Date_Of_Birth:'',
-        Password:'1234',
-        Account_Creation:'20/10/2003'
+        Password:'',
+        Account_Creation:''
+    });
+
+    var[Financial,setFinancial]=useState({
+        Card_Name:'John Doe',
+        Card_Number:'123456789012345',
+        Card_Exp_Date:'2003-10',
+        CVV:'123'
+    });
+
+    var[Address,setAddress]=useState({
+        address:'',
+        address_2:'',
+        City:'',
+        Zip_Code:''
     });
 
     
-    //Getting user information 
+    //Getting user information from database
     useEffect(()=>{
 
         axios.post("http://localhost:3000/User-Profile/GetUserInformation",{},{withCredentials:true}).then(
@@ -40,20 +50,55 @@ export default function UserProfile(){
                     Password:JSON.stringify(Response.data.password).slice(1,-1),
                     Account_Creation:JSON.stringify(Response.data.account_created_at).slice(1,-1),
                 }); 
+
+                //TODO:Fetch data from payment_methods table
+
+                //TODO:Fetch data from user_address table
             }
         );
     },[]);
 
-
     function ChangeUserInformation(e){
+
+        //TODO:Check email for 2 same emails
 
         e.preventDefault();
 
         axios.post("http://localhost:3000/User-Profile/ChangeUserInformation",{user_values:User},{withCredentials:true})
 
         .then(Response=>{
-
+            alert("User Information Changed Successfully!");
         })
+
+    }
+
+    function ChangeFinancialInformation(e){
+
+        e.preventDefault();
+
+        axios.post("http://localhost:3000/User-Profile/ChangeFinancialInformation",{financial_values:Financial},{withCredentials:true})
+        .then(Response=>{
+
+            if(Response.data){
+                alert("Financial Information Has Changed Successfully!");
+            }
+        })
+    }
+
+
+    function ChangeAddressInformation(e){
+
+        e.preventDefault();
+
+        axios.post("http://localhost:3000/User-Profile/ChangeAddressInformation",{address_values:Address},{withCredentials:true})
+
+        .then((Response)=>{
+
+            if(Response.data){
+
+                alert("Address Information Has Changed Successfully!");
+            }j
+        });
     }
 
     return(
@@ -97,12 +142,7 @@ export default function UserProfile(){
                         <h1 id='header'>User Information</h1>
                     
                         <div id="info-div" className="container-fluid pt-3 px-4 d-flex justify-content-start align-items-top flex-column gap-2">
-                            
-                            <div id="user-id-div" className="container-fluid px-5">
-                                <h1>User ID:{User.User_ID}</h1>
-                            </div>
-
-
+                            <br />
                             <br />
 
 
@@ -128,9 +168,10 @@ export default function UserProfile(){
                                 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Gender</label>
-                                    <select required value={User.Gender} onChange={(e)=>setUser(prev=>({...prev,Gender:e.target.value}))} class="form-control" id="exampleFormControlSelect1">    
-                                        <option value={"M"}>M</option>
-                                        <option value={"F"}>F</option>
+                                    <select required defaultValue={User.Gender} value={User.Gender} onChange={(e)=>setUser(prev=>({...prev,Gender:e.target.value}))} class="form-control" id="exampleFormControlSelect1">   
+                                        <option value={"Please select a gender"}>Please select a gender</option> 
+                                        <option selected={User.Gender=="M"}>M</option>
+                                        <option selected={User.Gender=="F"}>F</option>
                                     </select>
                                 </div>
 
@@ -143,7 +184,7 @@ export default function UserProfile(){
                                 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Date Of Birth</label>
-                                    <input required type="date" class="form-control" value={User.Date_Of_Birth} onChange={(e)=>setUser(prev=>({...prev,Date_Of_Birth:new Date(e.target.value).toString()}))} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                                    <input required type="date" class="form-control"  value={User.Date_Of_Birth} onChange={(e) => setUser(prev => ({ ...prev, Date_Of_Birth: e.target.value }))} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
                                 </div>
 
                                 
@@ -185,32 +226,32 @@ export default function UserProfile(){
                         <br /><br />
 
 
-                        <form className='d-flex justify-content-around align-items-center flex-wrap flex-row gap-5'>
+                        <form onSubmit={ChangeFinancialInformation} className='d-flex justify-content-around align-items-center flex-wrap flex-row gap-5'>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Card Name</label>
-                                <input required type="text" class="form-control" value={"Cihan Toker"} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Name..."/>
+                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,Card_Name:e.target.value}))}} type="text" class="form-control" value={Financial.Card_Name} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Name..."/>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Card Number</label>
-                                <input required type="text" pattern='[0-9]{16}' value={"123456789012345"} class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Surname..."/>
+                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,Card_Number:e.target.value}))}} value={Financial.Card_Number} type="text" pattern='[0-9]{16}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New NUmber..."/>
                             </div>
 
                             
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Card Exp. Date</label>
-                                <input required type="month" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Surname..."/>
+                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,Card_Exp_Date:e.target.value}))}} value={Financial.Card_Exp_Date} type="month" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Expire Date..."/>
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Card Exp. Date</label>
-                                <input required type="text" pattern='[0-9]{3}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Surname..."/>
+                                <label for="exampleInputEmail1">CVV</label>
+                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,CVV:e.target.value}))}} value={Financial.CVV} type="text" pattern='[0-9]{3}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New CVV..."/>
                             </div>
 
 
                             <div id='submit-button' className="container-fluid d-flex justify-content-center align-items-center">
                             <br /><br /><br /><br /><br /><br />
-                                <button type="button" class="btn btn-primary">Change Financial Information</button>
+                                <button type="submit" class="btn btn-primary">Change Financial Information</button>
                             </div>
                         </form>
                     </div>
@@ -234,31 +275,31 @@ export default function UserProfile(){
                         <br /><br />
 
 
-                        <form className='d-flex justify-content-around align-items-center flex-wrap flex-row gap-5'>
+                        <form onSubmit={ChangeAddressInformation} className='d-flex justify-content-around align-items-center flex-wrap flex-row gap-5'>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Address 1</label>
-                                <textarea required class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea onChange={(e)=>{setAddress(prev=>({...prev,address:e.target.value}))}} required value={Address.address} class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Address 2</label>
-                                <textarea required class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea onChange={(e)=>{setAddress(prev=>({...prev,address_2:e.target.value}))}} value={Address.address_2} required class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                             
                             <div class="form-group">
                                 <label for="exampleInputEmail1">City</label>
-                                <input required type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Surname..."/>
+                                <input onChange={(e)=>{setAddress(prev=>({...prev,City:e.target.value}))}} value={Address.City} required type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New City..."/>
                             </div>
                     
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Zip Code</label>
-                                <input required type="text" pattern='[0-9]{3}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Surname..."/>
+                                <input onChange={(e)=>{setAddress(prev=>({...prev,Zip_Code:e.target.value}))}} value={Address.Zip_Code} required type="text" pattern='[0-9]{5}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Zip Code..."/>
                             </div>
 
 
                             <div id='submit-button' className="container-fluid d-flex justify-content-center align-items-center">
                             <br /><br /><br /><br /><br /><br />
-                                <button type="button" class="btn btn-primary">Change Address Information</button>
+                                <button type="submit" class="btn btn-primary">Change Address Information</button>
                             </div>
                         </form>
                     </div>

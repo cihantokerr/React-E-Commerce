@@ -371,8 +371,6 @@ app.post("/User-Profile/GetUserInformation",function(req,res){
 
     var IDSession=jwt.verify(token,"secret_key").user_id;
 
-    
-
     //Getting the informations
     server.query("SELECT * FROM users WHERE user_id=?",[decryptAES(IDSession)],function(error,result,fields){
         if(error){
@@ -380,7 +378,8 @@ app.post("/User-Profile/GetUserInformation",function(req,res){
         }
         else{
 
-            //Sending values to the server            
+            //Sending values to the server     
+
             res.json({
                 user_id: result[0].user_id,
                 first_name: decryptAES(result[0].first_name),
@@ -388,18 +387,10 @@ app.post("/User-Profile/GetUserInformation",function(req,res){
                 email: result[0].email,
                 password:result[0].password,
                 phone_number: decryptAES(result[0].phone_number),
-                address_line_1: decryptAES(result[0].address_line_1),
-                address_line_2: decryptAES(result[0].address_line_2),
-                city: decryptAES(result[0].city),
-                zip_code: decryptAES(result[0].zip_code),
                 gender: decryptAES(result[0].gender),
                 date_of_birth: decryptAES(result[0].date_of_birth),
                 account_created_at: decryptAES(result[0].account_created_at),
                 shopping_cart: (result[0].shopping_cart),
-                card_name: decryptAES(result[0].card_name),
-                card_number: decryptAES(result[0].card_number),
-                card_exp_date: decryptAES(result[0].card_exp_date),
-                CVV: decryptAES(result[0].CVV),
             });
             
         }
@@ -411,7 +402,63 @@ app.post("/User-Profile/GetUserInformation",function(req,res){
 
 app.post("/User-Profile/ChangeUserInformation",function(req,res){
     var User=req.body.user_values;    
+
+    var token=req.cookies.token;
+
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+    
     console.log(User);
+    
+
+    //Getting the phone numbers to check for a duplicate phone number
+    server.query("SELECT GROUP_CONCAT(phone_number) as phone_numbers FROM users",function(error,result,fields) {
+        if(error){
+            throw error;
+        }
+        else{
+
+            var PhoneNumbers=JSON.stringify(result[0].phone_numbers).split(",");
+            var NumberFound=false;//If there is a duplicate phone number;This variable will be set to false
+            
+            //Checking for the duplicate phone numbers
+            for(var i=0;i<PhoneNumbers.length;i++){
+
+                var DecyrptedPhoneNumber=decryptAES(PhoneNumbers[i].slice(1,-1));
+
+                if(DecyrptedPhoneNumber==User.Phone_Number){
+                    NumberFound=true
+                    break;
+                }
+            }
+
+
+            //Sending the value if there is a duplicate
+            if(NumberFound){
+
+                res.json({
+                    number_found:true
+                });
+            }
+
+            else{
+
+                //Changing the values in database
+                server.query("UPDATE users SET first_name=?,last_name=?,gender=?,phone_number=?,date_of_birth=? WHERE user_id=?",
+                    [
+                        encryptAES(User.Name),encryptAES(User.Surname),encryptAES(User.Gender),encryptAES(User.Phone_Number),encryptAES(User.Date_Of_Birth),decryptAES(IDSession)
+                    ],
+                    function(error,result,fields){
+
+                        console.log("User Information Has Changed!");
+                        
+                    }
+                );
+            }
+            
+            
+
+        }
+    });
 });
 
 
@@ -486,26 +533,95 @@ app.post("/User-Profile/ChangeUserPassword",function(req,res){
     var token=req.cookies.token;
     var IDSession=jwt.verify(token,"secret_key").user_id;
 
-    console.log("Old:"+OldPassword);
-    console.log("New:"+NewPassword);
-    
-    
-
-
     //Getting password from database
-    server.query("SELECT password AS database_password FROM users WHERE user_id=?"[decryptAES(IDSession)], async function(error,result,fields){
+    server.query("SELECT password AS database_password FROM users WHERE user_id=?",[decryptAES(IDSession)], async function(error,result,fields){
         if(error){
             throw error;
         }
         else{
 
             var DatabasePassword=result[0].database_password;
+            
+            //Comparing the password from the database and old password
+            var OldAndDatabasePasswordsmatch=await CompareHash(DatabasePassword,OldPassword);
 
-            console.log(DatabasePassword);
+            //If passwords match;Change the user's password
+            if(!OldAndDatabasePasswordsmatch){
+
+                res.json({old_and_db_password_match:false});
+            }
+            else{
+
+                server.query("UPDATE users SET password=? WHERE user_id=?",[await hashedValue(NewPassword),decryptAES(IDSession)],function(error,result,fields){
+                    if(error){
+                        throw error;
+                    }
+                    else{
+
+                        console.log("Password has changed!");
+                    }
+                });
+            }
             
             
         }
     });
+});
+
+
+app.post("/User-Profile/ChangeFinancialInformation",function(req,res){
+
+    var Financial=req.body.financial_values;
+    
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    //Updating the values
+    server.query("UPDATE users SET card_name=?,card_number=?,card_exp_date=?,CVV=? WHERE user_id=?",[
+        encryptAES(Financial.Card_Name),
+        encryptAES(Financial.Card_Number),
+        encryptAES(Financial.Card_Exp_Date),
+        encryptAES(Financial.CVV),
+        decryptAES(IDSession)
+    ],
+    function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+
+            console.log("Financial Informations Has Changed Successfully!");
+
+            res.json(true);
+            
+        }
+    });
+});
+
+
+
+app.post("/User-Profile/ChangeAddressInformation",function(req,res){
+
+    var Address=req.body.address_values;
+
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    //Updating the values in database
+    server.query("UPDATE users SET address_line_1=?,address_line_2=?,city=?,zip_code=? WHERE user_id=?",
+        [
+            encryptAES(Address.address),
+            encryptAES(Address.address_2),
+            encryptAES(Address.City),
+            encryptAES(Address.Zip_Code),
+            decryptAES(IDSession)
+        ],
+        function(error,result,fields){
+
+            console.log("Address Updated Successfully!");
+            
+        }
+    );
 });
 
 

@@ -10,7 +10,6 @@ const hashedValue = async (data) => {
         throw new Error("Error hashing data: " + error.message);
     }
 };
-//var Hashed= await hashedValue("asadasdasd");
 
 
 
@@ -37,6 +36,7 @@ const decryptAES = (cipherText) => {
     const bytes = CryptoJS.AES.decrypt(cipherText, "secretKey");
     return bytes.toString(CryptoJS.enc.Utf8);
 };
+
 
 
 export{CompareHash,hashedValue,encryptAES,decryptAES}
