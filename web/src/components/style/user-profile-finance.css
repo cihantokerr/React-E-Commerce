@@ -95,3 +95,13 @@
 }
 
 
+
+#user-profile-edit-payment-body>#form>#close-button>p{
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+
+#user-profile-edit-payment-body>#form>#close-button>p:hover{
+    color: red;
+}

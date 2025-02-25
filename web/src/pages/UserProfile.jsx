@@ -231,8 +231,6 @@ export default function UserProfile(){
                     <div id="info-div" className="container-fluid pt-3 px-4 d-flex justify-content-start align-items-top flex-column gap-2">
 
                         <br />
-                        <br /><br />
-
                         {
                             Address.map((item,index)=>{
                                 

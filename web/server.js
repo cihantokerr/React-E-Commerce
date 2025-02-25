@@ -738,7 +738,59 @@ app.post("/User-Profile/GetAddressInformation",function(req,res){
 
     var AddressID=req.body.address_id;
 
-    server.query("SELECT ");
+    server.query("SELECT Address,City,ZIP_Code,IsPriority FROM ecommercedatabase.address WHERE AddressID=?",[AddressID],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            res.json({
+                Address:decryptAES(result[0].Address),
+                City:decryptAES(result[0].City),
+                ZIP_Code:decryptAES(result[0].ZIP_Code),
+                IsPriority:result[0].IsPriority
+            });
+        }
+    });
+});
+
+
+app.post("/User-Profile/SetAddressAsPriority",function(req,res){
+
+    var AddressID=req.body.address_id;
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+
+    server.query("UPDATE ecommercedatabase.address SET IsPriority=1 WHERE AddressID=?",[AddressID],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            console.log("Address Set To Priority!");
+            
+            res.json({
+                address_has_set_as_priority:true
+            });
+        }
+    });
+});
+
+
+app.post("/User-Profile/DeleteAddress",function(req,res){
+
+    var AddressID=req.body.address_id;
+
+    server.query("UPDATE ecommercedatabase.address SET IsDeleted=1 WHERE AddressID=?",[AddressID],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            console.log("Address Deleted!");
+            res.json({
+                has_address_deleted:true
+            });
+        }
+    });
 });
 
 

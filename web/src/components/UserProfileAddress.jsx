@@ -17,48 +17,47 @@ export default function UserProfileAddress({AddressID}){
     var[IseditOnDisplay,setIseditOnDisplay]=useState(false);
 
 
-    //Fetching all values about payment 
+    //Fetching all values about address 
     useEffect(()=>{
         axios.post("http://localhost:3000/User-Profile/GetAddressInformation",{address_id:AddressID},{withCredentials:true}).then(
-
             (Response)=>{
                 setInfo({
-                    Address:'',
-                    city:'',
-                    ZIP_Code:'',
-                    IsPriority:false
+                    Address:JSON.stringify(Response.data.Address).slice(1,-1).split(","),
+                    city:JSON.stringify(Response.data.City).slice(1,-1).split(","),
+                    ZIP_Code:JSON.stringify(Response.data.ZIP_Code).slice(1,-1).split(","),
+                    IsPriority:Response.data.IsPriority
                 })
             }
         );
     },[]);
 
 
-    //This function is going to set the payment method as a priority
     function SetAsPriority(){
-
-        /*axios.post("http://localhost:3000/User-Profile/SetPaymentAsPriority",{payment_id:Payment_id},{withCredentials:true}).then((Response)=>{
-            if(Response.data.payment_has_changed){
+        axios.post("http://localhost:3000/User-Profile/SetAddressAsPriority",{address_id:AddressID},{withCredentials:true}).then((Response)=>{
+            if(Response.data.address_has_set_as_priority){
                 window.location.href="/User-Profile";
             }
-        });*/
+        });
     }
 
 
     function DeleteAddress(){
-        /*axios.post("http://localhost:3000/User-Profile/DeletePayment",{payment_id:Payment_id},{withCredentials:true}).then((Response)=>{
-            if(Response.data.has_payment_deleted){
+        axios.post("http://localhost:3000/User-Profile/DeleteAddress",{address_id:AddressID},{withCredentials:true}).then((Response)=>{
+            if(Response.data.has_address_deleted){
                 window.location.href="/User-Profile";
             }
-        });*/
+        });
     }
 
 
-    function SavePayment(){
+    function SaveAddress(){
         /*axios.post("http://localhost:3000/User-Profile/SavePayment",{payment_id:Payment_id,payment_info:Info},{withCredentials:true}).then((Response)=>{
             if(Response.data.Is_payment_updated){
                 window.location.href="/User-Profile";
             }
         });*/
+
+        alert("Address Saved");
     }
     
     
@@ -83,7 +82,7 @@ export default function UserProfileAddress({AddressID}){
 
             <div id="edit-buttons" className="container-fluid d-flex justify-content-around align-items-center">
                 <Pen onClick={()=>{setIseditOnDisplay(true)}} fontSize={"1.5rem"} id='icon'/>
-                <X onClick={DeletePayment} fontSize={"2.5rem"} id='icon'/>
+                <X onClick={DeleteAddress} fontSize={"2.5rem"} id='icon'/>
             </div>
         </div>
 
@@ -91,26 +90,27 @@ export default function UserProfileAddress({AddressID}){
         <div style={{display:IseditOnDisplay ? 'flex' :'none'}} id='user-profile-edit-payment-body' className='container-fluid'>
 
             <div id="form" className='container w-50'>
+
+                <div id="close-button" className="container-fluid d-flex justify-content-end align-items-center px-5 pt-5">
+                    <p onClick={()=>{setIseditOnDisplay(false)}}>X</p>
+                </div>
+
                 <form className='d-flex justify-content-top pt-5 align-items-center flex-column gap-5'>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Card Number</label>
-                        <input value={Info.card_number} onChange={(e)=>{setInfo((prev)=>({...prev,card_number:e.target.value}))}} type="text" pattern='[0-9]{16}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Card Number"/>
+                        <label for="exampleInputEmail1">Address</label>
+                        <input value={Info.Address} onChange={(e)=>{setInfo((prev)=>({...prev,Address:e.target.value}))}} type="text" pattern='[0-9]{16}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Address"/>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Card Name</label>
-                        <input value={Info.card_name} onChange={(e)=>{setInfo((prev)=>({...prev,card_name:e.target.value}))}} type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter Card Name"/>
+                        <label for="exampleInputPassword1">City</label>
+                        <input value={Info.city} onChange={(e)=>{setInfo((prev)=>({...prev,city:e.target.value}))}} type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter City"/>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">CVC</label>
-                        <input value={Info.CVC} onChange={(e)=>{setInfo((prev)=>({...prev,CVC:e.target.value}))}} type="text" pattern='[0-9]{3}' class="form-control" id="exampleInputPassword1" placeholder="Enter CVC"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Card Exp. Date</label>
-                        <input min={new Date().toISOString().slice(0, 7)} value={Info.card_exp_date} onChange={(e)=>{setInfo((prev)=>({...prev,card_exp_date:e.target.value}))}} type="month" class="form-control" id="exampleInputPassword1" placeholder="Enter Card Exp. Date"/>
+                        <label for="exampleInputPassword1">ZIP Code</label>
+                        <input value={Info.ZIP_Code} onChange={(e)=>{setInfo((prev)=>({...prev,ZIP_Code:e.target.value}))}} type="text" pattern='[0-9]{3}' class="form-control" id="exampleInputPassword1" placeholder="Enter ZIP Code"/>
                     </div>
                     <div id="buttons-div" className="container-fluid d-flex justify-content-center align-items-center flex-row gap-3">
-                        <button onClick={SavePayment} className='btn btn-primary'>Save Changes</button>
-                        <button onClick={DeletePayment} className='btn btn-danger'>Delete</button>
+                        <button onClick={SaveAddress} className='btn btn-primary'>Save Changes</button>
+                        <button onClick={DeleteAddress} className='btn btn-danger'>Delete</button>
                     </div>
                 </form>
             </div>
