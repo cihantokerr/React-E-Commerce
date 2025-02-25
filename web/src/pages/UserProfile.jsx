@@ -1,7 +1,9 @@
-import { useDeferredValue, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './style/user-profile.css'
-import {Box, Box2, CreditCard, Person} from 'react-bootstrap-icons'
+import { Box2, CreditCard, Person} from 'react-bootstrap-icons'
 import axios from 'axios';
+import UserProfileFinance from '../components/UserProfileFinance';
+import UserProfileAddress from '../components/UserProfileAddress';
 
 export default function UserProfile(){
     var[SectionOnDisplay,setSectionOnDisplay]=useState("User-Information");
@@ -18,25 +20,15 @@ export default function UserProfile(){
         Account_Creation:''
     });
 
-    var[Financial,setFinancial]=useState({
-        Card_Name:'John Doe',
-        Card_Number:'123456789012345',
-        Card_Exp_Date:'2003-10',
-        CVV:'123'
-    });
 
-    var[Address,setAddress]=useState({
-        address:'',
-        address_2:'',
-        City:'',
-        Zip_Code:''
-    });
+    var[PaymentMethods,setPaymentMethods]=useState([]);
+    var[Address,setAddress]=useState([]);
 
     
-    //Getting user information from database
-    useEffect(()=>{
+    //Getting required information from database
+    useEffect(async ()=>{
 
-        axios.post("http://localhost:3000/User-Profile/GetUserInformation",{},{withCredentials:true}).then(
+        await axios.post("http://localhost:3000/User-Profile/GetUserInformation",{},{withCredentials:true}).then(
             (Response)=>{
 
                 setUser({
@@ -50,18 +42,33 @@ export default function UserProfile(){
                     Password:JSON.stringify(Response.data.password).slice(1,-1),
                     Account_Creation:JSON.stringify(Response.data.account_created_at).slice(1,-1),
                 }); 
-
-                //TODO:Fetch data from payment_methods table
-
-                //TODO:Fetch data from user_address table
             }
         );
+
+         await axios.post("http://localhost:3000/User-Profile/GetPaymentMethods",{},{withCredentials:true}).then(
+
+            (Response)=>{
+                setPaymentMethods(JSON.stringify(Response.data.payment_id).slice(1,-1).split(","));
+            }
+        );
+
+
+        
+        await axios.post("http://localhost:3000/User-Profile/GetAddresses",{},{withCredentials:true}).then(
+
+            (Response)=>{
+                setAddress(JSON.stringify(Response.data.address_ids).slice(1,-1).split(","));
+            }
+        );
+
+
     },[]);
 
+    console.log(Address);
+    
+    
+
     function ChangeUserInformation(e){
-
-        //TODO:Check email for 2 same emails
-
         e.preventDefault();
 
         axios.post("http://localhost:3000/User-Profile/ChangeUserInformation",{user_values:User},{withCredentials:true})
@@ -70,35 +77,6 @@ export default function UserProfile(){
             alert("User Information Changed Successfully!");
         })
 
-    }
-
-    function ChangeFinancialInformation(e){
-
-        e.preventDefault();
-
-        axios.post("http://localhost:3000/User-Profile/ChangeFinancialInformation",{financial_values:Financial},{withCredentials:true})
-        .then(Response=>{
-
-            if(Response.data){
-                alert("Financial Information Has Changed Successfully!");
-            }
-        })
-    }
-
-
-    function ChangeAddressInformation(e){
-
-        e.preventDefault();
-
-        axios.post("http://localhost:3000/User-Profile/ChangeAddressInformation",{address_values:Address},{withCredentials:true})
-
-        .then((Response)=>{
-
-            if(Response.data){
-
-                alert("Address Information Has Changed Successfully!");
-            }j
-        });
     }
 
     return(
@@ -220,40 +198,21 @@ export default function UserProfile(){
 
                     <h1 id='header'>Financial Information</h1>
 
-                    <div id="info-div" className="container-fluid pt-3 px-4 d-flex justify-content-start align-items-top flex-column gap-2">
+                    <div id="info-div" className="container-fluid pt-5 px-4 d-flex flex-wrap justify-content-top align-items-start flex-row gap-0">
 
                         <br />
                         <br /><br />
+                        {
+                            PaymentMethods.map((item,index)=>{
+                                
 
-
-                        <form onSubmit={ChangeFinancialInformation} className='d-flex justify-content-around align-items-center flex-wrap flex-row gap-5'>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Card Name</label>
-                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,Card_Name:e.target.value}))}} type="text" class="form-control" value={Financial.Card_Name} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Name..."/>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Card Number</label>
-                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,Card_Number:e.target.value}))}} value={Financial.Card_Number} type="text" pattern='[0-9]{16}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New NUmber..."/>
-                            </div>
-
-                            
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Card Exp. Date</label>
-                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,Card_Exp_Date:e.target.value}))}} value={Financial.Card_Exp_Date} type="month" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Expire Date..."/>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">CVV</label>
-                                <input required onChange={(e)=>{setFinancial(prev=>({...prev,CVV:e.target.value}))}} value={Financial.CVV} type="text" pattern='[0-9]{3}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New CVV..."/>
-                            </div>
-
-
-                            <div id='submit-button' className="container-fluid d-flex justify-content-center align-items-center">
-                            <br /><br /><br /><br /><br /><br />
-                                <button type="submit" class="btn btn-primary">Change Financial Information</button>
-                            </div>
-                        </form>
+                                return(
+                                    <>
+                                        <UserProfileFinance Payment_id={item}/>
+                                    </>
+                                )
+                            })
+                        }
                     </div>
 
                     </div>
@@ -274,34 +233,17 @@ export default function UserProfile(){
                         <br />
                         <br /><br />
 
+                        {
+                            Address.map((item,index)=>{
+                                
 
-                        <form onSubmit={ChangeAddressInformation} className='d-flex justify-content-around align-items-center flex-wrap flex-row gap-5'>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Address 1</label>
-                                <textarea onChange={(e)=>{setAddress(prev=>({...prev,address:e.target.value}))}} required value={Address.address} class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Address 2</label>
-                                <textarea onChange={(e)=>{setAddress(prev=>({...prev,address_2:e.target.value}))}} value={Address.address_2} required class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">City</label>
-                                <input onChange={(e)=>{setAddress(prev=>({...prev,City:e.target.value}))}} value={Address.City} required type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New City..."/>
-                            </div>
-                    
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Zip Code</label>
-                                <input onChange={(e)=>{setAddress(prev=>({...prev,Zip_Code:e.target.value}))}} value={Address.Zip_Code} required type="text" pattern='[0-9]{5}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter A New Zip Code..."/>
-                            </div>
-
-
-                            <div id='submit-button' className="container-fluid d-flex justify-content-center align-items-center">
-                            <br /><br /><br /><br /><br /><br />
-                                <button type="submit" class="btn btn-primary">Change Address Information</button>
-                            </div>
-                        </form>
+                                return(
+                                    <>
+                                        <UserProfileAddress AddressID={item}/>
+                                    </>
+                                )
+                            })
+                        }
                     </div>
 
                     </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2025 at 10:55 PM
+-- Generation Time: Feb 22, 2025 at 08:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -54,19 +54,19 @@ CREATE TABLE `payments` (
   `PaymentID` int(11) NOT NULL,
   `IsDeleted` tinyint(1) DEFAULT 0,
   `IsPriority` tinyint(1) DEFAULT 0,
-  `UserID` int(11) NOT NULL,
+  `UserID` varchar(60) NOT NULL,
   `Card_Name` varchar(300) NOT NULL,
   `Card_Number` varchar(300) NOT NULL,
   `CVV` varchar(300) NOT NULL,
   `Card_Exp_Date` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `payments`
 --
 
 INSERT INTO `payments` (`PaymentID`, `IsDeleted`, `IsPriority`, `UserID`, `Card_Name`, `Card_Number`, `CVV`, `Card_Exp_Date`) VALUES
-(1, 0, 1, 1, 'U2FsdGVkX1/hIkTDsmh64cL71B46tdbhk8viencrg/A=', 'U2FsdGVkX1/BirBgq360Vp4jsV/h7eGGh3mrnORECbbRkUB6S+IDz/ZmT0CQY9A5', 'U2FsdGVkX1+995/KK3zRsHHHBwpR1moeygHnl44x4SA=', 'U2FsdGVkX18DbpCnNxgEa0aUa/sLktLPRx2aqn/kZd0=');
+(1, 0, 1, '$2b$10$PrpxRiszf1cAM52tOugqf.mqOGq6aWDKfB9ylNhpIRrgzpB3Yy5QG', 'U2FsdGVkX1/hIkTDsmh64cL71B46tdbhk8viencrg/A=', 'U2FsdGVkX1/BirBgq360Vp4jsV/h7eGGh3mrnORECbbRkUB6S+IDz/ZmT0CQY9A5', 'U2FsdGVkX1+995/KK3zRsHHHBwpR1moeygHnl44x4SA=', 'U2FsdGVkX18DbpCnNxgEa0aUa/sLktLPRx2aqn/kZd0=');
 
 -- --------------------------------------------------------
 
@@ -142,7 +142,7 @@ CREATE TABLE `users` (
   `date_of_birth` varchar(50) NOT NULL,
   `account_created_at` varchar(100) NOT NULL DEFAULT current_timestamp(),
   `shopping_cart` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `users`

@@ -1,0 +1,97 @@
+#user-profile-finance-body{
+    width: 30%;
+    min-height: 13rem;
+    border-radius: 1rem;
+}
+
+
+#user-profile-finance-body>#card-name,#card-number,#edit-buttons,#cvc>p{
+    color: #949494;
+    font-size: 1.3rem;
+    font-weight: 350;
+}
+
+
+#user-profile-finance-body>#edit-buttons>#icon{
+    cursor: pointer;
+}
+
+#user-profile-finance-body>#edit-buttons>#icon:hover{
+    color: #5610DE;
+}
+
+
+#user-profile-finance-body>#card-number>p>input{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 0.01rem solid #d3d3d3; 
+    border-radius: 50%;
+    outline: none;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+
+#user-profile-finance-body>#card-number>p>input:checked{
+    background-color: #5610DE;
+    border: 0.1rem solid white;
+    box-shadow: 0 0 0 0.05rem #5610DE;
+}
+
+
+#user-profile-edit-payment-body {
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+#user-profile-edit-payment-body > #form {
+    background-color: white;
+    height: 100vh;
+    z-index: 3;
+}
+
+
+#user-profile-edit-payment-body>#form>form{
+    height: 100%;
+}
+
+
+#user-profile-edit-payment-body > #form>form>.form-group{
+    width: 60%;
+}
+
+
+#user-profile-edit-payment-body>#form>form>#buttons-div>.btn.btn-primary{
+    background-color: #5610DE;
+    border-color: #5610DE;
+}
+
+
+@keyframes button_animation {
+    from{
+        background-color: white;
+        color: #5610DE;
+    }
+
+    to{
+        background-color: #5610DE;
+        color: white;
+    }
+}
+
+
+#user-profile-edit-payment-body>#form>form>#buttons-div>button:hover{
+    animation-name:button_animation;
+    animation-duration: 0.3s;
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+

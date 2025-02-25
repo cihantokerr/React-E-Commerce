@@ -36,7 +36,7 @@ app.set('trust proxy', 1);
 const server=mysql.createConnection({
     host:"localhost",
     user:"root",
-    password:"",
+    password:"1234",
     database:"ecommercedatabase"
 });
 
@@ -569,30 +569,120 @@ app.post("/User-Profile/ChangeUserPassword",function(req,res){
 });
 
 
-app.post("/User-Profile/ChangeFinancialInformation",function(req,res){
-
-    var Financial=req.body.financial_values;
+app.post("/User-Profile/GetPaymentMethods",function(req,res){
     
     var token=req.cookies.token;
     var IDSession=jwt.verify(token,"secret_key").user_id;
+    
 
-    //Updating the values
-    server.query("UPDATE users SET card_name=?,card_number=?,card_exp_date=?,CVV=? WHERE user_id=?",[
-        encryptAES(Financial.Card_Name),
-        encryptAES(Financial.Card_Number),
-        encryptAES(Financial.Card_Exp_Date),
-        encryptAES(Financial.CVV),
-        decryptAES(IDSession)
-    ],
-    function(error,result,fields){
+    server.query("SELECT group_concat(PaymentID) as payment_ids FROM ecommercedatabase.payments WHERE IsDeleted=0 AND UserID=?",[decryptAES(IDSession)],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            res.json({payment_id:result[0].payment_ids});
+        }
+    });
+});
+
+
+app.post("/User-Profile/GetPaymentInformation",function(req,res){
+
+    var PaymentID=req.body.payment_id;
+    
+    server.query("SELECT Card_Name,Card_Number,CVV,Card_Exp_Date,IsPriority FROM ecommercedatabase.payments WHERE PaymentID=?",[PaymentID],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            res.json({
+                card_name:decryptAES(result[0].Card_Name),
+                card_number:decryptAES(result[0].Card_Number),
+                cvv:decryptAES(result[0].CVV),
+                card_exp_date:decryptAES(result[0].Card_Exp_Date),
+                is_priority:(result[0].IsPriority)
+            });
+        }
+    });
+});
+
+
+
+app.post("/User-Profile/SetPaymentAsPriority",function(req,res){
+
+    var PaymentID=req.body.payment_id;
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    server.query("UPDATE ecommercedatabase.payments SET IsPriority=0 WHERE UserID=?",[decryptAES(IDSession)],function(error,result,fields){
         if(error){
             throw error;
         }
         else{
 
-            console.log("Financial Informations Has Changed Successfully!");
+            //Setting the Ispriority to 1 on selected payment
+            server.query("UPDATE ecommercedatabase.payments SET IsPriority=1 WHERE PaymentID=?",[PaymentID],function(error,result,fields){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.json({payment_has_changed:true});
+                }
+            });
+        }
+    });
+});
 
-            res.json(true);
+
+app.post("/User-Profile/DeletePayment",function(req,res){
+
+    var PaymentID=req.body.payment_id;
+
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    //Checking that selected payment used as a priority payment
+    server.query("SELECT PaymentID FROM ecommercedatabase.payments WHERE IsPriority=1 AND UserID=?",[decryptAES(IDSession)],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+
+            var DatabasePaymentID=result[0].PaymentID;
+
+            //Comparing both ID's to check that selected payment is the priority payment
+            if(DatabasePaymentID==PaymentID){
+
+                server.query("UPDATE ecommercedatabase.payments SET IsDeleted=1,IsPriority=0 WHERE PaymentID=?",[PaymentID],function(error,result,fields){
+                    if(error){
+                        throw error;
+                    }
+                    else{
+                        //Setting the first payment as priority
+                        server.query("UPDATE ecommercedatabase.payments SET IsPriority=1 WHERE UserID=? LIMIT 1",[decryptAES(IDSession)],function(error,result,fields){
+                            if(error){
+                                throw error;
+                            }
+                            else{
+                                console.log("Updated!");
+                                
+                            }
+                        });
+                    }
+                });
+            }
+            else{
+                //Deleting the payment without selecting another payment as priority
+                server.query("UPDATE ecommercedatabase.payments SET IsDeleted=1,IsPriority=0 WHERE PaymentID=?",[PaymentID],function(error,result,fields){
+                    if(error){
+                        throw error;
+                    }
+                    else{
+                        console.log("Updated!");
+                        
+                    }
+                });
+            }
             
         }
     });
@@ -600,28 +690,55 @@ app.post("/User-Profile/ChangeFinancialInformation",function(req,res){
 
 
 
-app.post("/User-Profile/ChangeAddressInformation",function(req,res){
+app.post("/User-Profile/SavePayment",function(req,res){
 
-    var Address=req.body.address_values;
+    var PaymentID=req.body.payment_id;
 
     var token=req.cookies.token;
     var IDSession=jwt.verify(token,"secret_key").user_id;
 
-    //Updating the values in database
-    server.query("UPDATE users SET address_line_1=?,address_line_2=?,city=?,zip_code=? WHERE user_id=?",
-        [
-            encryptAES(Address.address),
-            encryptAES(Address.address_2),
-            encryptAES(Address.City),
-            encryptAES(Address.Zip_Code),
-            decryptAES(IDSession)
-        ],
-        function(error,result,fields){
+    var PaymentInfo=req.body.payment_info;
+    
 
-            console.log("Address Updated Successfully!");
-            
+    server.query("UPDATE ecommercedatabase.payments SET Card_Name=?,Card_Number=?,CVV=?,Card_Exp_Date=? WHERE PaymentID=?",[encryptAES(PaymentInfo.card_name),encryptAES(PaymentInfo.card_number),encryptAES(PaymentInfo.CVC),encryptAES(PaymentInfo.card_exp_date),PaymentID],function(error,result,fields){
+        if(error){
+            throw error;
         }
-    );
+        else{
+            console.log("Updated!");
+
+            res.json({Is_payment_updated:true})
+        }
+    });
+
+});
+
+app.post("/User-Profile/GetAddresses",function(req,res){
+
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    server.query("SELECT GROUP_CONCAT(AddressID) as address_ids from ecommercedatabase.address WHERE IsDeleted=0 AND UserID=?",[decryptAES(IDSession)],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            res.json({
+                address_ids:result[0].address_ids
+            });
+        }
+    });
+});
+
+
+app.post("/User-Profile/GetAddressInformation",function(req,res){
+
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    var AddressID=req.body.address_id;
+
+    server.query("SELECT ");
 });
 
 
