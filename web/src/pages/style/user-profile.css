@@ -300,3 +300,20 @@
     background-color: #5610DE;
     border-color: #5610DE;
 }
+
+
+
+#user-profile-body>#display-div>#orders-div>#header{
+    color: #949494;
+    font-weight: 350;
+    font-size: 2rem;
+}
+
+
+
+#user-profile-body>#display-div>#previous-orders-div>#header{
+    color: #949494;
+    font-weight: 350;
+    font-size: 2rem;
+}
+

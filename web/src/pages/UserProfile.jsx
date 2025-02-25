@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './style/user-profile.css'
-import { Box2, CreditCard, Person} from 'react-bootstrap-icons'
+import { Box2, CreditCard, Person, Truck} from 'react-bootstrap-icons'
 import axios from 'axios';
 import UserProfileFinance from '../components/UserProfileFinance';
 import UserProfileAddress from '../components/UserProfileAddress';
@@ -102,6 +102,18 @@ export default function UserProfile(){
                     <div onClick={()=>setSectionOnDisplay("Address-Information")} id="selection" className="container-fluid d-flex flex-wrap justify-content-center align-items-center">
                         <p className=''>
                             <Box2 id='icon'/> Address Informations
+                        </p>
+                    </div>
+
+                    <div onClick={()=>setSectionOnDisplay("Orders")} id="selection" className="container-fluid d-flex flex-wrap justify-content-center align-items-center">
+                        <p className=''>
+                            <Truck id='icon'/> Orders
+                        </p>
+                    </div>
+
+                    <div onClick={()=>setSectionOnDisplay("Previous-Orders")} id="selection" className="container-fluid d-flex flex-wrap justify-content-center align-items-center">
+                        <p className=''>
+                            <Truck id='icon'/> Previous Orders
                         </p>
                     </div>
                 </div>
@@ -246,6 +258,18 @@ export default function UserProfile(){
 
                     </div>
 
+
+
+                    <div id="orders-div" className={SectionOnDisplay=="Orders" ? "container-fluid p-0 m-0 d-flex justify-content-top align-items-center flex-column pt-3":"container-fluid p-0 m-0 d-none justify-content-top align-items-center flex-column pt-3"}>
+                        <br />
+                        <h1 id='header'>Orders</h1>
+                    </div>
+
+
+                    <div id="previous-orders-div" className={SectionOnDisplay=="Previous-Orders" ? "container-fluid p-0 m-0 d-flex justify-content-top align-items-center flex-column pt-3":"container-fluid p-0 m-0 d-none justify-content-top align-items-center flex-column pt-3"}>
+                        <br />
+                        <h1 id='header'>Previous Orders</h1>
+                    </div>
                 </div>
 
             </div>
