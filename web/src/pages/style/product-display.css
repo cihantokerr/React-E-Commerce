@@ -1,0 +1,97 @@
+#carousel{
+    width:45%;
+    aspect-ratio: 1;
+    background-color: #5610DE;
+    flex-wrap: wrap;
+    word-break: break-all;
+}
+
+#product-display-body>#info-body{
+    width: 55%;
+    flex-wrap: wrap;
+    word-break: break-all;
+}
+
+
+#product-display-body>#info-body>#header{
+    color:#949494;
+    font-weight: 350;
+    font-size: 2.5rem;
+}
+
+
+#product-display-body>#info-body>#sizes{
+    color: #949494;
+    font-size: 2rem;
+    font-weight: 350;
+    cursor: pointer;
+}
+
+
+#product-display-body>#info-body>#colors>#color{
+    width: 2rem;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+
+#product-display-body>#info-body>#price-div>#price{
+    color: #5610DE;
+    font-size: 2rem;
+    font-weight: 350;
+}
+
+
+#product-display-body>#info-body>#price-div>#discounted-price{
+    color: #5610DE;
+    font-size: 2.5rem;
+    font-weight: 350;
+}
+
+
+@keyframes button_animation {
+    from{
+        box-shadow: none;
+    }
+    to{
+        box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+    }
+}
+
+
+#product-display-body>#info-body>#add-button>button{
+    cursor: pointer;
+    width: 20%;
+    border-radius: 0.5rem;
+    background-color: #5610DE;
+    border-color: #5610DE;
+}
+
+
+#product-display-body>#info-body>#add-button>button:hover{
+    animation-name:button_animation;
+    animation-duration: 0.3s;
+    box-shadow: 0 4px 6px rgba(11, 0, 10, 0.3);
+}
+
+
+
+#product-display-desc{
+    flex-wrap: wrap;
+    word-break: break-all;
+}
+
+
+#product-display-desc>h1{
+    color: #5610DE;
+    font-size: 2.5rem;
+    font-weight: 350;
+}
+
+
+#product-display-desc>p{
+    color: #949494;
+    font-size: 1.5rem;
+    font-weight: 350;
+}

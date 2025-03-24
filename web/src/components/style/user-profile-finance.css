@@ -69,6 +69,22 @@
 }
 
 
+#user-profile-edit-payment-body > #form>form>.form-group>input{
+    box-shadow: none;
+    border-color: #d3d3d3;
+    height: 2.5rem;
+}
+
+
+#user-profile-edit-payment-body > #form>form>.form-group>textarea{
+    box-shadow: none;
+    border-color: #d3d3d3;
+    height: 5rem;
+    resize: none;
+}
+
+
+
 #user-profile-edit-payment-body>#form>form>#buttons-div>.btn.btn-primary{
     background-color: #5610DE;
     border-color: #5610DE;

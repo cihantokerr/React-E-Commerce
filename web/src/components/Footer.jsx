@@ -6,8 +6,6 @@ export default function Footer(){
 
     return(
         <>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br />
-
             <footer style={{width:"100%"}} className="text-center text-lg-start bg-body-tertiary text-muted">
             {/* Section: Social media */}
             <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">

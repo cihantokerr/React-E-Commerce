@@ -6,6 +6,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser';
 import jwt from  'jsonwebtoken';
 import { CompareHash, decryptAES, encryptAES, hashedValue } from './Encryption.js'
+import { Shop } from 'react-bootstrap-icons';
 
 const app=express();
 
@@ -141,6 +142,7 @@ app.get("/SeasonalProducts/GetProducts",function(req,res){
                 //Sending data to the client
                 res.json({product_ids:ProductIDs,product_names:ProductNames,product_prices:ProductPrices,discount_percentages:DiscountPercentages});
             }
+            
         }
     );
 });
@@ -693,10 +695,6 @@ app.post("/User-Profile/DeletePayment",function(req,res){
 app.post("/User-Profile/SavePayment",function(req,res){
 
     var PaymentID=req.body.payment_id;
-
-    var token=req.cookies.token;
-    var IDSession=jwt.verify(token,"secret_key").user_id;
-
     var PaymentInfo=req.body.payment_info;
     
 
@@ -717,6 +715,7 @@ app.post("/User-Profile/GetAddresses",function(req,res){
 
     var token=req.cookies.token;
     var IDSession=jwt.verify(token,"secret_key").user_id;
+    
 
     server.query("SELECT GROUP_CONCAT(AddressID) as address_ids from ecommercedatabase.address WHERE IsDeleted=0 AND UserID=?",[decryptAES(IDSession)],function(error,result,fields){
         if(error){
@@ -732,9 +731,6 @@ app.post("/User-Profile/GetAddresses",function(req,res){
 
 
 app.post("/User-Profile/GetAddressInformation",function(req,res){
-
-    var token=req.cookies.token;
-    var IDSession=jwt.verify(token,"secret_key").user_id;
 
     var AddressID=req.body.address_id;
 
@@ -792,6 +788,188 @@ app.post("/User-Profile/DeleteAddress",function(req,res){
         }
     });
 });
+
+
+
+app.post("/User-Profile/SaveAddress",function(req,res){
+    
+    var AddressID=req.body.address_id;
+    var AddressInfo=req.body.address_info;
+
+    var AddressValue=encryptAES(JSON.stringify(AddressInfo.Address).slice(1,-1));
+    var City=encryptAES(AddressInfo.city);
+    var ZIP_Code=encryptAES(AddressInfo.ZIP_Code);
+
+    /*server.query("UPDATE ecommercedatabase.address SET Address=?,City=?,ZIP_Code=? WHERE AddressID=? ",[AddressValue,City,ZIP_Code,AddressID],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            console.log("Address Saved!");
+            res.json({
+                Is_address_saved:true
+            });
+        }
+    }); */
+
+    console.log(AddressValue);
+    
+});
+
+
+
+app.get("/Product-Display/GetProductInformation",function(req,res){
+
+    var ProductID=req.query.ProductID;
+
+    //Getting the product information
+    server.query("SELECT name as product_name,description as product_desc,price,discount_percentage,color1,color2,color3 FROM ecommercedatabase.products WHERE product_id=?"
+        ,[ProductID],function(error,result,fields){
+            if(error){
+                throw error;
+            }
+            else{
+                res.json({
+                    product_name:result[0].product_name,
+                    product_desc:result[0].product_desc,
+                    price:result[0].price,
+                    discount_percentage:result[0].discount_percentage,
+                    color1:result[0].color1,
+                    color2:result[0].color2,
+                    color3:result[0].color3
+                });
+            }
+        }
+    );
+});
+
+
+app.get("/Product-Display/GetProductStocks",function(req,res){
+
+    var ProductID=req.query.product_id;
+    
+
+    server.query("SELECT color_1_S_stock,color_1_M_stock,color_1_L_stock,color_1_XL_stock,color_2_S_stock,color_2_M_stock,color_2_L_stock,color_2_XL_stock,color_3_S_stock,color_3_M_stock,color_3_L_stock,color_3_XL_stock FROM ecommercedatabase.products WHERE product_id=?",
+        [ProductID],function(error,result,fields){
+
+            if(error){
+                throw error;
+            }
+            else{
+
+                console.log(result[0]);
+                
+
+                res.json({
+                    Color_1_S_Stock:result[0].color_1_S_stock,
+                    Color_1_M_Stock:result[0].color_1_M_stock,
+                    Color_1_L_Stock:result[0].color_1_L_stock,
+                    Color_1_XL_Stock:result[0].color_1_XL_stock,
+
+                    Color_2_S_Stock:result[0].color_2_S_stock,
+                    Color_2_M_Stock:result[0].color_2_M_stock,
+                    Color_2_L_Stock:result[0].color_2_L_stock,
+                    Color_2_XL_Stock:result[0].color_2_XL_stock,
+
+                    Color_3_S_Stock:result[0].color_3_S_stock,
+                    Color_3_M_Stock:result[0].color_3_M_stock,
+                    Color_3_L_Stock:result[0].color_3_L_stock,
+                    Color_3_XL_Stock:result[0].color_3_XL_stock
+                });
+            }
+        }
+    );
+});
+
+
+app.post("/Product-Display/SaveProductToCart",function(req,res){
+    
+    var product_id=req.body.ProductID;
+    var size=req.body.Size;
+    var color=req.body.Color;
+
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+    
+
+    //Getting the shpping cart of the user
+    server.query("SELECT shopping_cart FROM ecommercedatabase.users WHERE user_id=?",[decryptAES(IDSession)],function(error,result,fields){
+
+        if(error){
+            throw error;
+        }
+        else{
+            var ShoppingCartText=JSON.stringify(result[0].shopping_cart).slice(1,-1);
+            var ShoppingCartSeperatedArray=[];
+            
+
+            //If shopping cart is empty;Add product to the shopping cart directly
+            if(ShoppingCartText==""){
+                ShoppingCartSeperatedArray.push([product_id,size,color,"1"]);
+                console.log(ShoppingCartSeperatedArray);
+                
+            }
+            else{
+
+                //If shopping cart is not empty;Find product in the shopping cart
+
+                //Seperating the shopping cart text
+                var ShoppingCartArray=ShoppingCartText.split("/");
+
+                for(var i=0;i<ShoppingCartArray.length;i++){
+                    ShoppingCartSeperatedArray.push(ShoppingCartArray[i].slice(1,-1).split(","));
+                }
+
+                
+                //Finding the product in the shopping cart
+                var IsProductFound=false;
+                var ProductIndex=0;
+                
+                for(var i=0;i<ShoppingCartSeperatedArray.length;i++){
+
+                    if(ShoppingCartSeperatedArray[i][0]==product_id && ShoppingCartSeperatedArray[i][1]==size && ShoppingCartSeperatedArray[i][2]==color){
+                        IsProductFound=true;
+                        ProductIndex=i;
+                        break;
+                    }
+                }
+                
+
+                //If product is found;Increase the quantity of the product
+                if(IsProductFound==true){
+                    ShoppingCartSeperatedArray[ProductIndex][3]=(parseInt(ShoppingCartSeperatedArray[ProductIndex][3])+1).toString();
+                }
+                else{
+                    ShoppingCartSeperatedArray.push([product_id,size,color,"1"]);
+                }
+            }
+
+
+            var ShoppingCartDBArray=[];
+
+            //Creating the shopping cart text
+            for(var i=0;i<ShoppingCartSeperatedArray.length;i++){
+
+               ShoppingCartDBArray.push("["+ShoppingCartSeperatedArray[i].join(",")+"]");
+            }
+
+            var ShoppingCartDBString=ShoppingCartDBArray.join("/");
+
+            //Saving the shopping cart to the database
+            server.query("UPDATE ecommercedatabase.users SET shopping_cart=? WHERE user_id=?",[ShoppingCartDBString,decryptAES(IDSession)],function(error,result,fields){
+                if(error){
+                    throw error;
+                }
+                else{
+                    console.log("Product Added To Cart!");
+                }
+            });
+
+        }
+    });
+});
+
+
 
 
 app.listen(3000,function(){

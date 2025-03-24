@@ -205,3 +205,14 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+CREATE TABLE ecommercedatabase.orders (
+    OrderID varchar(100) NOT NULL,
+    UserID varchar(100) NOT NULL,
+    TotalPrice varchar(100) NOT NULL,
+    status ENUM('pending', 'paid', 'shipped', 'delivered', 'canceled', 'refunded') NOT NULL DEFAULT 'pending',
+    PaymentID varchar(100) NOT NULL, 
+    OrderDate  varchar(100) NOT NULL,
+    Products varchar(3000) not null
+);

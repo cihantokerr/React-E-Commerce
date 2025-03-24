@@ -51,11 +51,11 @@ export default function UserProfileAddress({AddressID}){
 
 
     function SaveAddress(){
-        /*axios.post("http://localhost:3000/User-Profile/SavePayment",{payment_id:Payment_id,payment_info:Info},{withCredentials:true}).then((Response)=>{
-            if(Response.data.Is_payment_updated){
+        axios.post("http://localhost:3000/User-Profile/SaveAddress",{address_id:AddressID,address_info:Info},{withCredentials:true}).then((Response)=>{
+            if(Response.data.Is_address_saved){
                 window.location.href="/User-Profile";
             }
-        });*/
+        });
 
         alert("Address Saved");
     }
@@ -98,7 +98,7 @@ export default function UserProfileAddress({AddressID}){
                 <form className='d-flex justify-content-top pt-5 align-items-center flex-column gap-5'>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Address</label>
-                        <input value={Info.Address} onChange={(e)=>{setInfo((prev)=>({...prev,Address:e.target.value}))}} type="text" pattern='[0-9]{16}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Address"/>
+                        <textarea value={Info.Address} onChange={(e)=>{setInfo((prev)=>({...prev,Address:e.target.value}))}} pattern='[0-9]{16}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Address" ></textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">City</label>

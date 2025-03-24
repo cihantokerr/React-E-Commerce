@@ -4,6 +4,7 @@ import { Box2, CreditCard, Person, Truck} from 'react-bootstrap-icons'
 import axios from 'axios';
 import UserProfileFinance from '../components/UserProfileFinance';
 import UserProfileAddress from '../components/UserProfileAddress';
+import UserProfileOrder from '../components/UserProfileOrder';
 
 export default function UserProfile(){
     var[SectionOnDisplay,setSectionOnDisplay]=useState("User-Information");
@@ -60,11 +61,7 @@ export default function UserProfile(){
                 setAddress(JSON.stringify(Response.data.address_ids).slice(1,-1).split(","));
             }
         );
-
-
     },[]);
-
-    console.log(Address);
     
     
 
@@ -263,12 +260,18 @@ export default function UserProfile(){
                     <div id="orders-div" className={SectionOnDisplay=="Orders" ? "container-fluid p-0 m-0 d-flex justify-content-top align-items-center flex-column pt-3":"container-fluid p-0 m-0 d-none justify-content-top align-items-center flex-column pt-3"}>
                         <br />
                         <h1 id='header'>Orders</h1>
+
+                        <div id="info-div" className='container-fluid pt-3 px-4 d-flex justify-content-start align-items-top flex-column gap-2'>
+
+                            <UserProfileOrder OrderID={"1"}/>
+                        </div>
                     </div>
 
 
                     <div id="previous-orders-div" className={SectionOnDisplay=="Previous-Orders" ? "container-fluid p-0 m-0 d-flex justify-content-top align-items-center flex-column pt-3":"container-fluid p-0 m-0 d-none justify-content-top align-items-center flex-column pt-3"}>
                         <br />
                         <h1 id='header'>Previous Orders</h1>
+
                     </div>
                 </div>
 

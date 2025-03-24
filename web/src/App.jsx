@@ -10,6 +10,7 @@ import AfterLogin from './pages/AfterLogin'
 import UserProfile from './pages/UserProfile'
 import ChangeEmail from './pages/ChangeEmail'
 import ChangePassword from './pages/ChangePassword'
+import ProductDisplay from './pages/ProductDisplay'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -27,6 +28,7 @@ function App() {
           <Route path='/User-Profile' element={<UserProfile/>}/>
           <Route path='/Change-Email' element={<ChangeEmail/>}/>
           <Route path='/Change-Password' element={<ChangePassword/>}/>
+          <Route path='/Display-Product/:productID' element={<ProductDisplay/>}/>
         </Routes>
       </BrowserRouter>
     </>

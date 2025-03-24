@@ -51,20 +51,22 @@ export default function ChangePassword(){
                 <h1 id="header" className='text-center'>Change Your Password</h1>
 
                 <form onSubmit={ChangePassword} className='d-flex justify-content-center align-items-center flex-column pt-5'>
-                    <div id='form-group' class="form-group w-50">
-                        <label for="exampleInputEmail1">New Password</label>
-                        <input onChange={(e)=>{setPassword(e.target.value)}} required type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                    <div id='form-group' className="form-group w-50">
+                        <label htmlFor="exampleInputEmail1">New Password</label>
+                        <input onChange={(e)=>{setPassword(e.target.value)}} required type="password" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
                         <br />
                         <br />
                     </div>
-                    <div id='form-group' class="form-group w-50">
-                        <label for="exampleInputPassword1">Current Password</label>
+                    <div id='form-group' className="form-group w-50">
+                        <label htmlFor="exampleInputPassword1">Current Password</label>
                         <input onChange={(e)=>{setOldPassword(e.target.value)}} required type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"/>
                     </div>
                     <br />
                     <br />
-                    <button type="submit" class="btn btn-primary">Change Password</button>
+                    <button type="submit" className="btn btn-primary">Change Password</button>
                 </form>
+
+                <div className={"container-fluid"}></div>
             </div>
         </>
     )

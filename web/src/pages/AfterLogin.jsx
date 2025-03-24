@@ -118,18 +118,18 @@ export default function AfterLogin(){
 
                         <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                             
-                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}}  class="form-check-input" type="checkbox" value="Men" id="flexCheckDefault"/>
+                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Men" id="flexCheckDefault"/>
 
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label className="form-check-label" form="flexCheckDefault">
                                 Men
                             </label>
                         </div>
 
                         <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                             
-                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}}  class="form-check-input" type="checkbox" value="Women" id="flexCheckDefault"/>
+                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Women" id="flexCheckDefault"/>
 
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label className="form-check-label" form="flexCheckDefault">
                                 Women
                             </label>
                         </div>
@@ -137,9 +137,9 @@ export default function AfterLogin(){
 
                         <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                             
-                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}}  class="form-check-input" type="checkbox" value="Boys" id="flexCheckDefault"/>
+                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Boys" id="flexCheckDefault"/>
 
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label className="form-check-label" form="flexCheckDefault">
                                 Boys
                             </label>
                         </div>
@@ -148,9 +148,9 @@ export default function AfterLogin(){
 
                         <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                             
-                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="Girls" id="flexCheckDefault"/>
+                            <input onChange={(e)=>{setCategorie(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Girls" id="flexCheckDefault"/>
 
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label className="form-check-label" form="flexCheckDefault">
                                 Girls
                             </label>
                         </div>
@@ -167,18 +167,18 @@ export default function AfterLogin(){
 
                             <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                                     
-                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="T-Shirt" id="flexCheckDefault"/>
+                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="T-Shirt" id="flexCheckDefault"/>
 
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <label className="form-check-label" form="flexCheckDefault">
                                     T-Shirt
                                 </label>
                             </div>
 
                             <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                                     
-                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="Shirt" id="flexCheckDefault"/>
+                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Shirt" id="flexCheckDefault"/>
     
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <label className="form-check-label" form="flexCheckDefault">
                                     Shirt
                                 </label>
                             </div>
@@ -186,18 +186,18 @@ export default function AfterLogin(){
 
                             <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                                     
-                                    <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="Sweater" id="flexCheckDefault"/>
+                                    <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Sweater" id="flexCheckDefault"/>
         
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label className="form-check-label" form="flexCheckDefault">
                                         Sweater
                                     </label>
                             </div>
 
                             <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                                     
-                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="Shoes" id="flexCheckDefault"/>
+                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Shoes" id="flexCheckDefault"/>
         
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <label className="form-check-label" form="flexCheckDefault">
                                     Shoes
                                 </label>
                             </div>
@@ -205,9 +205,9 @@ export default function AfterLogin(){
 
                             <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                                     
-                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="Jacket" id="flexCheckDefault"/>
+                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Jacket" id="flexCheckDefault"/>
             
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <label className="form-check-label" form="flexCheckDefault">
                                     Jacket
                                 </label>
                             </div>
@@ -215,9 +215,9 @@ export default function AfterLogin(){
 
                             <div id="categorie-selection" className="container d-flex justify-content-start align-items-bottom flex-row gap-2">
                                     
-                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} class="form-check-input" type="checkbox" value="Pants" id="flexCheckDefault"/>
+                                <input onChange={(e)=>{setClothTypes(prev => (e.target.checked ? [...prev,e.target.value] : ""))}} className="form-check-input" type="checkbox" value="Pants" id="flexCheckDefault"/>
                 
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <label className="form-check-label" form="flexCheckDefault">
                                     Pants
                                 </label>
                             </div>

@@ -1,0 +1,17 @@
+.accordion-button:focus, 
+.accordion-button:not(.collapsed) {
+  box-shadow: none !important;
+  outline: none !important;
+  background-color: transparent !important; /* Optional: Remove background change */
+  color: inherit !important; /* Optional: Keep text color consistent */
+  border: none !important;
+}
+
+
+.accordion>.accordion-item>h2>.accordion-button {
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    color: #949494 !important;
+}
+
+
