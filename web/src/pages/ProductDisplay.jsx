@@ -11,229 +11,100 @@ export default function ProductDisplay(){
     var {productID} = useParams();
 
     var[ProductInfo,setProductInfo]=useState({
-        ProductName:"T-Shirt",
-        ProductPrice:100,
-        Color1:"",
-        Color2:"",
-        Color3:"",
-        DiscountedPrice:90,
-        Description:"Desc 1"
+        Name:"",
+        Description:"",
+        Price:0,
+        DiscountPercentage:0
     });
 
-    var[IsProductOnDiscount,setIsProductOnDiscount]=useState(null);
+    var[ProductStocks,setProductStocks]=useState([]);
+    var[ProductSizes,setProductSizes]=useState([]);
+    var[ProductColors,setProductColors]=useState([]);
 
 
-    var[ProductStocks,setProductStocks]=useState({
+    var[UniqueSizes,setUniqueSizes]=useState([]);//Will be used to display the unique sizes of the product
+    var[UniqueColors,setUniqueColors]=useState([]);//Will be used to display the unique colors of the product
 
-        Color_1_S_Stock:0,
-        Color_2_S_Stock:0,
-        Color_3_S_Stock:0,
+    var[ProductStocksColorsSizes,setProductStocksColorsSizes]=useState([]);//Will be used to store the stocks of the product based on the color and size
 
-        Color_1_M_Stock:0,
-        Color_2_M_Stock:0,
-        Color_3_M_Stock:0,
 
-        Color_1_L_Stock:0,
-        Color_2_L_Stock:0,
-        Color_3_L_Stock:0,
-
-        Color_1_XL_Stock:0,
-        Color_2_XL_Stock:0,
-        Color_3_XL_Stock:0,
+    var[ClothOrder,setClothOrder]=useState({
+        ProductID:productID,
+        Color:"",
+        Size:"",
+        Quantity:1
     });
 
-        //Getting product information
-        useEffect( async ()=>{
 
-            await axios.get("http://localhost:3000/Product-Display/GetProductInformation",{
-                params:{
-                    ProductID:productID
-                }
-            }).then((Response)=>{
-
-                setProductInfo({
-                    ProductName:Response.data.product_name,
-                    ProductPrice:parseInt(Response.data.price),
-                    Color1:Response.data.color1,
-                    Color2:Response.data.color2,
-                    Color3:Response.data.color3,
-
-                    //Calculating the discounted price
-                    DiscountedPrice:parseInt(Response.data.price)-(parseInt(Response.data.discount_percentage)/100),
-
-                    Description:Response.data.product_desc
-                });
-
-                setIsProductOnDiscount(parseInt(Response.data.discount_percentage)==0 ? false:true);
+    //Getting the product information
+    useEffect(()=>{
+        axios.get("http://localhost:3000/Product-Display/GetProductInformation",{
+            params:{
+                ProductID:productID
+            }
+        }).then((Response)=>{
+            setProductInfo({
+                Name: Response.data.product.name,
+                Description: Response.data.product.description,
+                Price: parseInt(Response.data.product.price),
+                DiscountPercentage: parseInt(Response.data.product.discount_percentage)
             });
+            setProductColors(JSON.stringify(Response.data.product.colors).slice(1,-1).split(","));
+            setProductSizes(JSON.stringify(Response.data.product.sizes).slice(1,-1).split(","));
+            setProductStocks(JSON.stringify(Response.data.product.stocks).slice(1,-1).split(","));
 
-            //Getting product stocks
+            setUniqueSizes([...new Set(Response.data.product.sizes.split(",").map(size => size.trim()))]);
+            setUniqueColors([...new Set(Response.data.product.colors.split(",").map(size => size.trim()))]);
+        });
 
-            await axios.get("http://localhost:3000/Product-Display/GetProductStocks",{params:{product_id:productID}}).then((Response)=>{
+        var combined= [];
 
-                setProductStocks({
-                    Color_1_S_Stock:Response.data.Color_1_S_Stock,
-                    Color_2_S_Stock:Response.data.Color_2_S_Stock,
-                    Color_3_S_Stock:Response.data.Color_3_S_Stock,
-
-                    Color_1_M_Stock:Response.data.Color_1_M_Stock,
-                    Color_2_M_Stock:Response.data.Color_2_M_Stock,
-                    Color_3_M_Stock:Response.data.Color_3_M_Stock,
-
-                    Color_1_L_Stock:Response.data.Color_1_L_Stock,
-                    Color_2_L_Stock:Response.data.Color_2_L_Stock,
-                    Color_3_L_Stock:Response.data.Color_3_L_Stock,
-
-                    Color_1_XL_Stock:Response.data.Color_1_XL_Stock,
-                    Color_2_XL_Stock:Response.data.Color_2_XL_Stock,
-                    Color_3_XL_Stock:Response.data.Color_3_XL_Stock
+            //Grouping the sizes,colors and stocks
+        for(var i=0;i<ProductStocks.length;i++){
+                combined.push({
+                    Color: ProductColors[i],
+                    Size: ProductSizes[i],
+                    Stock: ProductStocks[i]
                 });
-            })
+        }
 
-        },[]);
+        setProductStocksColorsSizes(combined);
+    
+    },[]);
+    
 
-    var[SelectedColor,setSelectedColor]=useState("");
-    var[SelectedSize,setSelectedSize]=useState("");
 
-    function AddProduct(){
+    //Adding the product to the cart
+    function AddProductToCart(){
 
-        var ProductInStocks=false;
-
-        //If user has not selected a color or a size;Display an error
-        if(SelectedColor=="" || SelectedSize==""){
-            alert("Please select a size or a color to add the product to the shopping cart");
+        if(ClothOrder.Color=="" || ClothOrder.Size=="" || ClothOrder.Quantity==0){
+            alert("Please select a color, size and quantity");
         }
         else{
-            //Checking the selected color and size's stock 
-            if(SelectedColor=="Color1"){
-
-                if(SelectedSize=="S"){
-                    if(ProductStocks.Color_1_S_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-                else if(SelectedSize=="M"){
-                    if(ProductStocks.Color_1_M_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-                else if(SelectedSize=="L"){
-                    if(ProductStocks.Color_1_L_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }  
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-                else{
-                    if(ProductStocks.Color_1_XL_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
+            //Finding the index of the product in the stocks based on the color and size
+            var index=0;
+            for(var i=0;i<ProductStocksColorsSizes.length;i++){
+                if(ProductStocksColorsSizes[i].Color==ClothOrder.Color && ProductStocksColorsSizes[i].Size==ClothOrder.Size){
+                    index=i;
+                    break;
                 }
             }
 
-            else if(SelectedColor=="Color2"){
-
-                if(SelectedSize=="S"){
-                    if(ProductStocks.Color_2_S_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-
-                else if(SelectedSize=="M"){
-                    if(ProductStocks.Color_2_M_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-
-                else if(SelectedSize=="L"){
-                    if(ProductStocks.Color_2_L_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-
-                else{
-                    if(ProductStocks.Color_2_XL_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
+            console.log("ProductStocksColorsSizes: ", ProductStocksColorsSizes);
+                
+            //Checking if the quantity is less than or equal to the stock
+            if(ClothOrder.Quantity > parseInt(ProductStocksColorsSizes[index].Stock)){
+                alert("The quantity is greater than the stock");
             }
-
             else{
-
-                if(SelectedSize=="S"){
-                    if(ProductStocks.Color_3_S_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-
-                else if(SelectedSize=="M"){
-                    if(ProductStocks.Color_3_M_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-
-                else if(SelectedSize=="L"){
-                    if(ProductStocks.Color_3_L_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
-
-                else{
-                    if(ProductStocks.Color_3_XL_Stock==0){
-                        alert("Selected product is out of stock!");
-                    }
-                    else{
-                        ProductInStocks=true;
-                    }
-                }
+                axios.post("http://localhost:3000/Product-Display/AddProductToCart", {
+                    ClothOrder: ClothOrder,
+                },{withCredentials:true}).then(()=>{
+                    alert("Product added to cart successfully");
+                });
             }
-        }
-
-
-        //If the product is in stock;Add the product to the shopping cart
-        if(ProductInStocks){
-            axios.post("http://localhost:3000/Product-Display/SaveProductToCart",{
-                ProductID:productID,
-                Size:SelectedSize,
-                Color:SelectedColor
-
-            },
-            {withCredentials:true}).then((Response)=>{
-                if(Response.data.is_product_saved==true){
-                    alert("Product is added to the shopping cart");
-                }
-            });
+            
+            
         }
     }
 
@@ -249,28 +120,42 @@ export default function ProductDisplay(){
 
                 <div id="info-body" className="container d-flex justify-content-top align-items-start flex-column gap-2 pt-4 px-5">
                     
-                    <h1 id="header">{ProductInfo.ProductName}</h1>
+                    <h1 id="header">{ProductInfo.Name}</h1>
 
                     <br /><br />
 
                     <div id="sizes" className="container d-flex justify-content-start align-items-center flex-row gap-5">
+                        {
+                            UniqueSizes.map((size, index) => {
 
-                        <p onClick={()=>{setSelectedSize("S")}} id="selection">S</p>
-
-                        <br />
-                        <p onClick={()=>{setSelectedSize("M")}} id="selection">M</p>
-                        <br />
-                        <p onClick={()=>{setSelectedSize("L")}} id="selection">L</p>
-                        <br />
-                        <p onClick={()=>{setSelectedSize("XL")}} id="selection">XL</p>
+                                return(
+                                    <>
+                                        <p onClick={()=>{setClothOrder(prev => ({...prev,Size: size}))}} id="selection">{size}</p>
+                                    </>
+                                )
+                            })
+                        }
                     </div>
 
                     <br /><br />
 
                     <div id="colors" className="container-fluid d-flex justify-content-start align-items-start flex-row gap-5">
-                        <div style={{backgroundColor:ProductInfo.Color1,display:ProductInfo.Color1==null ? 'none':'block'}} onClick={()=>{setSelectedColor("Color1")}} id="color" className="container p-0 m-0 border"></div>
-                        <div style={{backgroundColor:ProductInfo.Color2,display:ProductInfo.Color2==null ? 'none':'block'}} onClick={()=>{setSelectedColor("Color2")}} id="color" className="container p-0 m-0 border"></div>
-                        <div style={{backgroundColor:ProductInfo.Color3,display:ProductInfo.Color3==null ? 'none':'block'}} onClick={()=>{setSelectedColor("Color3")}} id="color" className="container p-0 m-0 border"></div>
+
+                        {
+                            UniqueColors.map((color, index) => {
+                                return(
+                                    <>
+                                        <div onClick={()=>{setClothOrder(prev=>({...prev,Color:color}))}} id="color" className="container p-0 m-0 border" style={{backgroundColor:color}}></div>
+                                    </>
+                                )
+                            })
+                        }
+                    </div>  
+
+                    <br /><br />
+
+                    <div id="colors" className="container-fluid d-flex justify-content-start align-items-start flex-row gap-5">
+                        <input id="quantity-input" style={{width:"3rem"}} type="number" value={ClothOrder.Quantity} onChange={(e)=>{setClothOrder(prev=>({...prev,Quantity:e.target.value}))}} class="form-control"/>
                     </div>  
 
                     <br /><br /><br />
@@ -280,18 +165,21 @@ export default function ProductDisplay(){
                         <br />
 
                         <p className="px-0 pt-2" style={{
-                            textDecoration:IsProductOnDiscount ? 'line-through red':'none',
-                            fontSize:IsProductOnDiscount ? '2rem':'2.5rem'
-                            }} id="price">{ProductInfo.ProductPrice} $</p>
+                            textDecoration:ProductInfo.DiscountPercentage!=0 ? 'line-through red':'none',
+                            fontSize:ProductInfo.DiscountPercentage!=0 ? '2rem':'2.5rem'
+                            }} id="price">{ProductInfo.Price} $</p>
 
 
-                        <p style={{display:IsProductOnDiscount ? 'block':'none'}} className="p-0" id="discounted-price">{ProductInfo.DiscountedPrice} $</p>
+                        <p style={{display:ProductInfo.DiscountPercentage==0 ? 'none':'block'}} className="p-2" id="discounted-price">{
+                            
+                                ProductInfo.Price - (ProductInfo.Price * (ProductInfo.DiscountPercentage / 100))
+                            } $</p>
                     </div>
 
                     <br /><br />
 
                     <div id="add-button" className="container-fluid d-flex justify-content-start align-items-center">
-                        <button onClick={AddProduct}>Add Product</button>
+                        <button onClick={AddProductToCart}>Add Product</button>
                     </div>
                 </div>
             </div>

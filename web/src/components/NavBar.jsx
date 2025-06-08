@@ -13,27 +13,35 @@ export default function NavBar(){
     var[IsShoppingCartOnDisplay,setIsShoppingCartOnDisplay]=useState(false);
     var IsCookieCleared=null;
 
-    var HasUserLoginedValue=false;//Used this to set the usestate value inside of a useeffect
-
     var[SearchBarValue,setSearchBarValue]=useState("");
-
+    var[ShoppingCartProducts,setShoppingCartProducts]=useState([]);
     const navigate=useNavigate();
 
-    const GetSession=async()=>{
-        await axios.post("http://localhost:3000/GetSession",{},{
-            withCredentials:true
-        })
 
-        .then(Response=>{
-            HasUserLoginedValue=Response.data.has_user_logined;
-            setHasUserLogined(HasUserLoginedValue);
-        });    
-    }
+    useEffect(() => {
+        axios.post("http://localhost:3000/GetSession", {}, {
+            withCredentials: true
+        }).then(response => {
+            const hasUserLoginedValue = response.data.has_user_logined;
+            setHasUserLogined(hasUserLoginedValue);
 
-    //Getting the session and checking it for security
-    useEffect(()=>{
-        GetSession();
-    },[]);
+            if (hasUserLoginedValue === true) {
+                axios.post("http://localhost:3000/NavBar/GetShoppingCartProducts", {}, {
+                    withCredentials: true
+                }).then((response) => {
+                    const rawData = response.data.shopping_cart;
+                    const products = [];
+
+                    rawData.split("/").forEach(productStr => {
+                        const productFields = productStr.split(",");
+                        products.push(productFields);
+                    });
+
+                    setShoppingCartProducts(products);
+                });
+            }
+        });
+    }, []);
 
 
 
@@ -58,8 +66,6 @@ export default function NavBar(){
             }
         });
     }
-
-
 
     return(
         <>
@@ -106,9 +112,6 @@ export default function NavBar(){
             <div style={{display:IsShoppingCartOnDisplay ? 'block':'none'}} id="nav-bar-shopping-cart" className="container border p-0 m-0">
                 <br />
                 <div id='products-div' className='container-fluid d-flex justify-content-start align-items-center flex-column gap-2'>
-                    <ShoppingCartProduct ProductID={"1"}/>
-                    <ShoppingCartProduct ProductID={"1"}/>
-                    <ShoppingCartProduct ProductID={"1"}/>
                     <ShoppingCartProduct ProductID={"1"}/>
                 </div>
 

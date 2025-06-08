@@ -95,3 +95,17 @@
     font-size: 1.5rem;
     font-weight: 350;
 }
+
+
+#quantity-input{
+    border-color: #d3d3d3;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+
+#quantity-input:focus{
+    outline: none;
+    box-shadow: none;
+
+}

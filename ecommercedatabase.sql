@@ -78,6 +78,9 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `color1`, 
 (17, 'Puffer Jacket', 'This puffer jacket features a cozy down-filled design to keep you warm in cold weather. The adjustable cuffs and hem help seal in warmth while offering a stylish look.', 89.99, '#800080', '#DA70D6', NULL, 10, 15, 10, 5, 5, 10, 5, 5, 0, 0, 0, 0, 0.00, 'Women', 'Jacket', '2025-01-26 14:27:40', '2025-01-26 14:27:40'),
 (18, 'Light Beige Chinos', 'These light beige chinos are a versatile addition to your wardrobe. Made from cotton with just the right amount of stretch, they offer comfort and a sharp, polished look.', 39.99, '#F5F5DC', '#D3D3D3', NULL, 20, 30, 20, 15, 10, 5, 10, 15, 0, 0, 0, 0, 0.00, 'Boys', 'Pants', '2025-01-26 14:27:40', '2025-01-26 14:27:40');
 
+
+
+
 -- --------------------------------------------------------
 
 --

@@ -238,6 +238,30 @@ app.post("/Register-Login/Register",function(req,res){
 });
 
 
+app.post("/NavBar/GetShoppingCartProducts",function(req,res){
+
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+    server.query("SELECT GROUP_CONCAT(shopping_cart) as shopping_cart FROM users WHERE user_id=?",[decryptAES(IDSession)],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+            var ShoppingCartArray=JSON.stringify(result[0].shopping_cart).slice(1,-1).split("/");
+            var ShoppingCartSeperatedArray=[];
+            var ShoppingCartInnerArray=[];
+            
+            for(var i=0;i<ShoppingCartArray.length;i++){
+                ShoppingCartInnerArray=ShoppingCartArray[i].split(",");
+                ShoppingCartSeperatedArray.push(ShoppingCartInnerArray);
+            }
+
+            
+            
+        }
+    });
+});
 
 app.post("/GetSession",function(req,res){
     var token=req.cookies.token;
@@ -275,7 +299,7 @@ app.post("/LogOff",function(req,res){
 
 app.get("/After-Login/GetProducts",function(req,res){
 
-    server.query("SELECT GROUP_CONCAT(product_id) as product_ids,GROUP_CONCAT(name) product_names,GROUP_CONCAT(price) as product_prices,GROUP_CONCAT(discount_percentage) as discount_percentages from products",function(error,result,fields){
+    server.query("SELECT GROUP_CONCAT(product_id) as product_ids,GROUP_CONCAT(name) product_names,GROUP_CONCAT(price) as product_prices,GROUP_CONCAT(discount_percentage) as discount_percentages from ecommercedatabase.products",function(error,result,fields){
         if(error){
             throw error;
         }
@@ -404,12 +428,9 @@ app.post("/User-Profile/GetUserInformation",function(req,res){
 
 app.post("/User-Profile/ChangeUserInformation",function(req,res){
     var User=req.body.user_values;    
-
     var token=req.cookies.token;
-
     var IDSession=jwt.verify(token,"secret_key").user_id;
-    
-    console.log(User);
+
     
 
     //Getting the phone numbers to check for a duplicate phone number
@@ -811,36 +832,24 @@ app.post("/User-Profile/SaveAddress",function(req,res){
             });
         }
     }); */
-
-    console.log(AddressValue);
-    
 });
 
 
 
 app.get("/Product-Display/GetProductInformation",function(req,res){
 
-    var ProductID=req.query.ProductID;
+    var ProductID=req.query.ProductID;    
 
     //Getting the product information
-    server.query("SELECT name as product_name,description as product_desc,price,discount_percentage,color1,color2,color3 FROM ecommercedatabase.products WHERE product_id=?"
-        ,[ProductID],function(error,result,fields){
-            if(error){
-                throw error;
-            }
-            else{
-                res.json({
-                    product_name:result[0].product_name,
-                    product_desc:result[0].product_desc,
-                    price:result[0].price,
-                    discount_percentage:result[0].discount_percentage,
-                    color1:result[0].color1,
-                    color2:result[0].color2,
-                    color3:result[0].color3
-                });
-            }
+
+    server.query("SELECT name,price,description,discount_percentage,group_concat(sub_products.color) as colors,group_concat(sub_products.size) as sizes,group_concat(sub_products.stock) as stocks FROM ecommercedatabase.products INNER JOIN sub_products ON products.product_id=sub_products.product_id WHERE products.product_id=?",[ProductID],function(error,result,fields){
+        if(error){
+            throw error;
         }
-    );
+        else{
+            res.json({product:result[0]});
+        }
+    });
 });
 
 
@@ -969,6 +978,73 @@ app.post("/Product-Display/SaveProductToCart",function(req,res){
     });
 });
 
+app.post("/Product-Display/AddProductToCart",function(req,res){
+
+    var ClothOrder=req.body.ClothOrder;
+    var token=req.cookies.token;
+    var IDSession=jwt.verify(token,"secret_key").user_id;
+
+
+    server.query("SELECT shopping_cart FROM ecommercedatabase.users WHERE user_id=?",[decryptAES(IDSession)],function(error,result,fields){
+        if(error){
+            throw error;
+        }
+        else{
+
+            //Parsing the cart into an array
+            var ShoppingCartAray=JSON.stringify(result[0].shopping_cart).slice(1,-1).split("/");
+            var ShoppingCartSeperatedArray=[];
+            
+
+            for(var i=0;i<ShoppingCartAray.length;i++){
+                ShoppingCartSeperatedArray.push(ShoppingCartAray[i].split(","));
+            }
+
+
+            //Cheking if the product is already in cart
+            var IsProductFound=false;
+            var ProductIndex=0;
+            
+
+            for(var i=0;i<ShoppingCartSeperatedArray.length;i++){
+                if(ClothOrder.ProductID==ShoppingCartSeperatedArray[i][0] && ClothOrder.Size==ShoppingCartSeperatedArray[i][1] && ClothOrder.Color==ShoppingCartSeperatedArray[i][2]){
+                    IsProductFound=true;
+                    ProductIndex=i;
+                    break;
+                }
+            }
+
+
+            //If product is found;Increase the quantity of the product
+            if(IsProductFound){
+                ShoppingCartSeperatedArray[ProductIndex][3]=(parseInt(ShoppingCartSeperatedArray[ProductIndex][3])+1).toString();
+                console.log("Product Quantity Increased!");
+            }
+            else{
+                ShoppingCartSeperatedArray.push([ClothOrder.ProductID,ClothOrder.Size,ClothOrder.Color,ClothOrder.Quantity.toString()]);
+                console.log("Product Added To Cart!");
+            }
+
+
+            //Updating the db
+            var ShoppingCartDBArray=[];
+            for(var i=0;i<ShoppingCartSeperatedArray.length;i++){
+                ShoppingCartDBArray.push(ShoppingCartSeperatedArray[i].join(","));
+            }
+           
+           var ShoppingCartDBString=ShoppingCartDBArray.join("/");
+           
+           server.query("UPDATE ecommercedatabase.users SET shopping_cart=? WHERE user_id=?",[ShoppingCartDBString,decryptAES(IDSession)],function(error,result,fields){
+                if(error){
+                    throw error;
+                }
+                else{
+                    console.log("Shopping Cart Updated!");
+                }
+            });
+        }
+    });
+});
 
 
 

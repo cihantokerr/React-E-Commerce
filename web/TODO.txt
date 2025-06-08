@@ -1,0 +1,6 @@
+Re-Code the product display
+Code the shopping cart
+Re-Code Financial and Address Informations
+Code orders
+Code previous orders
+Code payment page
